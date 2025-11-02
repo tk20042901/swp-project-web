@@ -1,7 +1,7 @@
 package com.swp.project.service.user;
 
 import com.swp.project.dto.EditManagerDto;
-import com.swp.project.dto.ManagerRegisterDto;
+import com.swp.project.dto.CreateManagerDto;
 import com.swp.project.dto.ViewManagerDto;
 import com.swp.project.entity.address.CommuneWard;
 import com.swp.project.entity.user.Manager;
@@ -49,6 +49,10 @@ public class ManagerService {
                 managerRepository.findByCid(updatedManager.getCId()) != null)) {
             throw new IllegalArgumentException("Căn cước công dân đã được sử dụng");
         }
+        
+        if(!updatedManager.getPassword().isBlank()){
+            existingManager.setPassword(passwordEncoder.encode(updatedManager.getPassword()));
+        }
         existingManager.setEmail(updatedManager.getEmail());
         existingManager.setFullname(updatedManager.getFullname());
         existingManager.setBirthDate(updatedManager.getBirthDate());
@@ -56,15 +60,10 @@ public class ManagerService {
         existingManager.setSpecificAddress(updatedManager.getSpecificAddress());
         existingManager.setCommuneWard(ward);
         existingManager.setEnabled(isEnabled);
-
         if(!isEnabled) eventPublisher.publishEvent(new UserDisabledEvent(existingManager.getEmail()));
-
         managerRepository.save(existingManager);
     }
-    public void validateCreateManager(ManagerRegisterDto registerDto, BindingResult bindingResult) throws RuntimeException{
-        if (!registerDto.getConfirmPassword().equals(registerDto.getPassword())) {
-            bindingResult.rejectValue("confirmPassword", "error.confirmPassword", "Mật khẩu và xác nhận mật khẩu không khớp");
-        }
+    public void validateCreateManager(CreateManagerDto registerDto, BindingResult bindingResult) throws RuntimeException{
         if (userRepository.existsByEmail(registerDto.getEmail())) {
             bindingResult.rejectValue("email", "error.email", "Mail đã được sử dụng");
         }
@@ -74,12 +73,9 @@ public class ManagerService {
                 throw new RuntimeException(message);
         }
     }
-    public void createManager(ManagerRegisterDto registerDto) {
+    public void createManager(CreateManagerDto registerDto) {
         CommuneWard ward = communeWardRepository.findById(registerDto.getCommuneWardCode())
             .orElseThrow(() -> new RuntimeException("Không tìm thấy xã"));
-        if (!registerDto.getConfirmPassword().equals(registerDto.getPassword())) {
-            throw new RuntimeException("Mật khẩu và xác nhận mật khẩu không khớp");
-        }
         if (userRepository.existsByEmail(registerDto.getEmail())) {
             throw new IllegalArgumentException("Mail đã được sử dụng");
         }

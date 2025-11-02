@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -38,7 +39,7 @@ public class AdminController {
 
     @GetMapping("/create-manager")
     public String getCreateManagerPage(Model model) {
-        model.addAttribute("managerRegisterDto", new ManagerRegisterDto());
+        model.addAttribute("managerRegisterDto", new CreateManagerDto());
         return "pages/admin/create-manager";
     }
 
@@ -67,7 +68,7 @@ public class AdminController {
 
     @PostMapping("/create-manager")
     public String createManager(
-            @Valid @ModelAttribute ManagerRegisterDto managerRegisterDto,
+            @Valid @ModelAttribute CreateManagerDto managerRegisterDto,
             BindingResult bindingResult,
             RedirectAttributes redirectAttributes,
             Model model) {
@@ -85,8 +86,14 @@ public class AdminController {
     @PostMapping("/edit-manager/{id}")
     public String editManager(@PathVariable Long id,
             @Valid @ModelAttribute EditManagerDto editManagerDto,
+            BindingResult bindingResult,
             RedirectAttributes redirectAttributes) {
         try {
+            if (bindingResult.hasErrors()) {
+                FieldError fieldError = bindingResult.getFieldErrors().get(0);
+                String message = fieldError.getField() + ": " + fieldError.getDefaultMessage();
+                throw new RuntimeException(message);
+            }
             managerService.updateManager(id, editManagerDto);
             redirectAttributes.addFlashAttribute("success", "Cập nhật quản lý thành công.");
         } catch (RuntimeException e) {

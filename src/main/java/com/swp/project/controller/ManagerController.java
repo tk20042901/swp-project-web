@@ -78,7 +78,9 @@ public class ManagerController {
     public String manageSeller(
             @RequestParam(value = "sortCriteria", required = false) String sortCriteria,
             @RequestParam(value = "subpageIndex", required = false, defaultValue = "1") Integer subpageIndex,
+            @RequestParam(value = "queryEmail", required = false) String queryEmail,
             @RequestParam(value = "queryName", required = false) String queryName,
+            @RequestParam(value = "queryAddress", required = false) String queryAddress,
             @RequestParam(value = "queryCid", required = false) String queryCid,
             @RequestParam(value = "sortCriteriaInPage", required = false) String sortCriteriaInPage,
             HttpSession session,
@@ -98,14 +100,29 @@ public class ManagerController {
         if (session.getAttribute("numEachPage") == null) {
             session.setAttribute("numEachPage", numEachPage);
         }
+        if (session.getAttribute("queryEmail") == null) {
+            session.setAttribute("queryEmail", "");
+        }
         if (session.getAttribute("queryName") == null) {
             session.setAttribute("queryName", "");
+        }
+        if (session.getAttribute("queryAddress") == null) {
+            session.setAttribute("queryAddress", "");
         }
         if (session.getAttribute("queryCid") == null) {
             session.setAttribute("queryCid", "");
         }
+
+        if (queryEmail != null) {
+            session.setAttribute("queryEmail", queryEmail);
+            session.setAttribute("subpageIndex", 1);
+        }
         if (queryName != null) {
             session.setAttribute("queryName", queryName);
+            session.setAttribute("subpageIndex", 1);
+        }
+        if (queryAddress != null) {
+            session.setAttribute("queryAddress", queryAddress);
             session.setAttribute("subpageIndex", 1);
         }
         if (queryCid != null) {
@@ -130,7 +147,9 @@ public class ManagerController {
                 sellerService.getSellers(
                 (Integer) session.getAttribute("subpageIndex"),
                 numEachPage,
+                session.getAttribute("queryEmail").toString(),
                 session.getAttribute("queryName").toString(),
+                session.getAttribute("queryAddress").toString(),
                 session.getAttribute("queryCid").toString(),
                 (String) session.getAttribute("sortCriteria"),
                 (Integer) session.getAttribute("k"),
@@ -146,12 +165,13 @@ public class ManagerController {
     public String manageShipper(
             @RequestParam(value = "sortCriteria", required = false) String sortCriteria,
             @RequestParam(value = "subpageIndex", required = false, defaultValue = "1") Integer subpageIndex,
+            @RequestParam(value = "queryEmail", required = false) String queryEmail,
             @RequestParam(value = "queryName", required = false) String queryName,
+            @RequestParam(value = "queryAddress", required = false) String queryAddress,
             @RequestParam(value = "queryCid", required = false) String queryCid,
             @RequestParam(value = "sortCriteriaInPage", required = false) String sortCriteriaInPage,
             HttpSession session,
             Model model) {
-        final int numEachPage = 10;
         if (session.getAttribute("k") == null) {
             session.setAttribute("k", 1);
         }
@@ -167,14 +187,29 @@ public class ManagerController {
         if (session.getAttribute("numEachPage") == null) {
             session.setAttribute("numEachPage", numEachPage);
         }
+        if (session.getAttribute("queryEmail") == null) {
+            session.setAttribute("queryEmail", "");
+        }
         if (session.getAttribute("queryName") == null) {
             session.setAttribute("queryName", "");
+        }
+        if (session.getAttribute("queryAddress") == null) {
+            session.setAttribute("queryAddress", "");
         }
         if (session.getAttribute("queryCid") == null) {
             session.setAttribute("queryCid", "");
         }
+
+        if (queryEmail != null) {
+            session.setAttribute("queryEmail", queryEmail);
+            session.setAttribute("subpageIndex", 1);
+        }
         if (queryName != null) {
             session.setAttribute("queryName", queryName);
+            session.setAttribute("subpageIndex", 1);
+        }
+        if (queryAddress != null) {
+            session.setAttribute("queryAddress", queryAddress);
             session.setAttribute("subpageIndex", 1);
         }
         if (queryCid != null) {
@@ -190,21 +225,25 @@ public class ManagerController {
             k = -k;
             session.setAttribute("k", k);
         }
+
         if (subpageIndex != null) {
             session.setAttribute("subpageIndex", subpageIndex);
         }
 
-        Page<Shipper> shippers =
-                shipperService.getShippers(
-                        (Integer) session.getAttribute("subpageIndex"),
-                        numEachPage,
-                        session.getAttribute("queryName").toString(),
-                        session.getAttribute("queryCid").toString(),
-                        (String) session.getAttribute("sortCriteria"),
-                        (Integer) session.getAttribute("k"),
-                        (String) session.getAttribute("sortCriteriaInPage"));
+        Page<Shipper> shippers = shipperService.getShippers(
+                (Integer) session.getAttribute("subpageIndex"),
+                numEachPage,
+                session.getAttribute("queryEmail").toString(),
+                session.getAttribute("queryName").toString(),
+                session.getAttribute("queryAddress").toString(),
+                session.getAttribute("queryCid").toString(),
+                (String) session.getAttribute("sortCriteria"),
+                (Integer) session.getAttribute("k"),
+                (String) session.getAttribute("sortCriteriaInPage")
+        );
 
         model.addAttribute("list", shippers.getContent());
+
         model.addAttribute("totalPages", shippers.getTotalPages());
         return "pages/manager/manage-shipper";
     }
@@ -737,6 +776,12 @@ public class ManagerController {
     public String getBills( @RequestParam(value = "sortCriteria", required = false) String sortCriteria,
                             @RequestParam(value = "subpageIndex", required = false, defaultValue= "1") Integer subpageIndex,
                             @RequestParam(value = "queryName", required = false) String queryName,
+                            @RequestParam(value = "queryShopName", required = false) String queryShopName,
+                            @RequestParam(value = "queryAddress", required = false) String queryAddress,
+                            @RequestParam(value = "fromDate", required = false) String fromDate,
+                            @RequestParam(value = "toDate", required = false) String toDate,
+                            @RequestParam(value = "minAmount", required = false) String minAmount,
+                            @RequestParam(value = "maxAmount", required = false) String maxAmount,
                             @RequestParam(value = "sortCriteriaInPage", required = false) String sortCriteriaInPage,
                             HttpSession session,
                             Model model) {
@@ -756,16 +801,22 @@ public class ManagerController {
         if (session.getAttribute("numEachPage") == null) {
             session.setAttribute("numEachPage", numEachPage);
         }
-        if (session.getAttribute("queryName") == null) {
-            session.setAttribute("queryName", "");
-        }
-        if (session.getAttribute("queryCid") == null) {
-            session.setAttribute("queryCid", "");
-        }
-        if (queryName != null) {
-            session.setAttribute("queryName", queryName);
-            session.setAttribute("subpageIndex", 1);
-        }
+        if (session.getAttribute("queryName") == null) session.setAttribute("queryName", "");
+        if (session.getAttribute("queryShopName") == null) session.setAttribute("queryShopName", "");
+        if (session.getAttribute("queryAddress") == null) session.setAttribute("queryAddress", "");
+        if (session.getAttribute("fromDate") == null) session.setAttribute("fromDate", "");
+        if (session.getAttribute("toDate") == null) session.setAttribute("toDate", "");
+        if (session.getAttribute("minAmount") == null) session.setAttribute("minAmount", "");
+        if (session.getAttribute("maxAmount") == null) session.setAttribute("maxAmount", "");
+        if (session.getAttribute("queryCid") == null) session.setAttribute("queryCid", "");
+
+        if (queryName != null) { session.setAttribute("queryName", queryName); session.setAttribute("subpageIndex", 1); }
+        if (queryShopName != null) { session.setAttribute("queryShopName", queryShopName); session.setAttribute("subpageIndex", 1); }
+        if (queryAddress != null) { session.setAttribute("queryAddress", queryAddress); session.setAttribute("subpageIndex", 1); }
+        if (fromDate != null) { session.setAttribute("fromDate", fromDate); session.setAttribute("subpageIndex", 1); }
+        if (toDate != null) { session.setAttribute("toDate", toDate); session.setAttribute("subpageIndex", 1); }
+        if (minAmount != null) { session.setAttribute("minAmount", minAmount); session.setAttribute("subpageIndex", 1); }
+        if (maxAmount != null) { session.setAttribute("maxAmount", maxAmount); session.setAttribute("subpageIndex", 1); }
         if (sortCriteria != null && !sortCriteria.isEmpty()) {
             session.setAttribute("sortCriteria", sortCriteria);
         }
@@ -779,13 +830,20 @@ public class ManagerController {
             session.setAttribute("subpageIndex", subpageIndex);
         }
 
-        Page<Bill> bills = billService.getBills(
-                (Integer) session.getAttribute("subpageIndex"),
-                numEachPage,
-                session.getAttribute("queryName").toString(),
-                (String) session.getAttribute("sortCriteria"),
-                (Integer) session.getAttribute("k"),
-                (String) session.getAttribute("sortCriteriaInPage"));
+
+    Page<Bill> bills = billService.getBills(
+        (Integer) session.getAttribute("subpageIndex"),
+        numEachPage,
+        session.getAttribute("queryName").toString(),
+        session.getAttribute("queryShopName").toString(),
+        session.getAttribute("queryAddress").toString(),
+        session.getAttribute("fromDate").toString(),
+        session.getAttribute("toDate").toString(),
+        session.getAttribute("minAmount").toString(),
+        session.getAttribute("maxAmount").toString(),
+        (String) session.getAttribute("sortCriteria"),
+        (Integer) session.getAttribute("k"),
+        (String) session.getAttribute("sortCriteriaInPage"));
 
         model.addAttribute("k", session.getAttribute("k"));
         model.addAttribute("bills", bills.getContent());
@@ -794,9 +852,16 @@ public class ManagerController {
         model.addAttribute("sortCriteria", session.getAttribute("sortCriteria"));
         model.addAttribute("sortCriteriaInPage", session.getAttribute("sortCriteriaInPage"));
         model.addAttribute("queryName", session.getAttribute("queryName"));
-        model.addAttribute("totalPages", bills.getTotalPages());
-        model.addAttribute("billService", billService);
-        return "pages/manager/bill-list";
+    model.addAttribute("totalPages", bills.getTotalPages());
+    model.addAttribute("billService", billService);
+    // Add new search fields to model for form repopulation
+    model.addAttribute("queryShopName", session.getAttribute("queryShopName"));
+    model.addAttribute("queryAddress", session.getAttribute("queryAddress"));
+    model.addAttribute("fromDate", session.getAttribute("fromDate"));
+    model.addAttribute("toDate", session.getAttribute("toDate"));
+    model.addAttribute("minAmount", session.getAttribute("minAmount"));
+    model.addAttribute("maxAmount", session.getAttribute("maxAmount"));
+    return "pages/manager/bill-list";
     }
 
     @GetMapping("/orders/{billId}")

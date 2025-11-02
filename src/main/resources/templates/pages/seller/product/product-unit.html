@@ -226,8 +226,33 @@
                         </tr>
                     </tbody>
                 </table>
+                <div>
+                    <a th:if="!${productUnits.first}"
+                       th:href="@{/seller/product-unit(page=0, allowDecimal=${allowDecimal})}"
+                       class="btn btn-sm btn-primary">
+                        Đầu<i class="bi bi-arrow-left"></i>
+                    </a>
+                    <a th:if="${productUnits.hasPrevious()}"
+                       th:href="@{/seller/product-unit(page=${productUnits.number - 1}, allowDecimal=${allowDecimal})}"
+                       class="btn btn-sm btn-primary">
+                        <i class="bi bi-arrow-left"></i> Trước
+                    </a>
+                    <span>Trang <span th:text="${productUnits.number + 1}"></span> / <span
+                            th:text="${productUnits.totalPages}"></span></span>
+                    <a th:if="${productUnits.hasNext()}"
+                       th:href="@{/seller/product-unit(page=${productUnits.number + 1}, allowDecimal=${allowDecimal})}"
+                       class="btn btn-sm btn-primary">
+                        Sau <i class="bi bi-arrow-right"></i>
+                    </a>
+                    <a th:if="!${productUnits.last}"
+                       th:href="@{/seller/product-unit(page=${productUnits.totalPages - 1}, allowDecimal=${allowDecimal})}"
+                       class="btn btn-sm btn-primary">
+                        Cuối <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
             </div>
         </div>
+
     </div>
     <script>
         document.querySelectorAll('.delete-unit-btn').forEach(button => {

@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 import com.swp.project.entity.order.shipping.ShippingStatus;
+import org.hibernate.annotations.Formula;
 
 @Getter
 @Setter
@@ -87,5 +88,11 @@ public class Order{
         if (shipping == null || shipping.isEmpty()) return null;
         return getCurrentShipping().getShippingStatus();
     }
+
+    @Formula("(SELECT SUM(oi.quantity * p.price) " +
+            " FROM order_item oi " +
+            " JOIN product p ON p.id = oi.product_id " +
+            " WHERE oi.order_id = id)")
+    private Long totalAmount;
 
 }

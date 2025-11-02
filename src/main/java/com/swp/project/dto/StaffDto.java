@@ -23,8 +23,8 @@ public class StaffDto implements Serializable {
     @Email(message = "Email không hợp lệ")
     private String email;
 
-    @NotBlank(message = "Mật khẩu không được để trống")
-    @Size(min = 6, max = 50, message = "Mật khẩu phải có độ dài từ 6 đến 50 ký tự")
+    // @NotBlank(message = "Mật khẩu không được để trống")
+    // @Size(min = 6, max = 50, message = "Mật khẩu phải có độ dài từ 6 đến 50 ký tự")
     private String password;
 
     @NotBlank(message = "Tên không được để trống")
@@ -53,7 +53,7 @@ public class StaffDto implements Serializable {
         return StaffDto.builder()
                 .id(seller.getId())
                 .email(seller.getEmail())
-                .password("placeholder")
+                .password("")
                 .fullname(seller.getFullname())
                 .birthDate(seller.getBirthDate())
                 .cid(seller.getCid())
@@ -68,7 +68,7 @@ public class StaffDto implements Serializable {
         return StaffDto.builder()
                 .id(shipper.getId())
                 .email(shipper.getEmail())
-                .password("placeholder")
+                .password("")
                 .fullname(shipper.getFullname())
                 .birthDate(shipper.getBirthDate())
                 .cid(shipper.getCid())

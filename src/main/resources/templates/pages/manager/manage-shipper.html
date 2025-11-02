@@ -300,8 +300,8 @@
                     <i class="bi bi-funnel"></i> Bộ lọc và tìm kiếm
                 </h5>
                 <div style="display: flex; gap: 1rem; align-items: flex-end; flex-wrap: wrap;">
-                    <!-- Pagination -->
-                    <div style="flex: 0 0 auto;">
+                    <!-- Pagination: chỉ hiển thị nếu có nhiều hơn 1 trang -->
+                    <div style="flex: 0 0 auto;" th:if="${totalPages > 1}">
                         <label class="form-label">
                             <i class="bi bi-list-ol"></i> Trang
                         </label>
@@ -329,13 +329,22 @@
                         </form>
                     </div>
 
+                    <!-- Search Email -->
+                    <div style="flex: 1 1 250px;">
+                        <label class="form-label">
+                            <i class="bi bi-envelope"></i> Email người giao hàng
+                        </label>
+                        <input type="text" name="queryEmail" class="form-control" th:value="${session.queryEmail}"
+                               placeholder="Nhập email người giao hàng..." form="searchForm">
+                    </div>
+
                     <!-- Search Name -->
                     <div style="flex: 1 1 250px;">
                         <label class="form-label">
-                            <i class="bi bi-search"></i> Tên người giao hàng
+                            <i class="bi bi-person"></i> Họ tên
                         </label>
                         <input type="text" name="queryName" class="form-control" th:value="${session.queryName}"
-                               placeholder="Nhập tên người giao hàng..." form="searchForm">
+                               placeholder="Nhập họ tên người giao hàng..." form="searchForm">
                     </div>
 
                     <!-- Search CID -->
@@ -345,6 +354,15 @@
                         </label>
                         <input type="text" name="queryCid" class="form-control" th:value="${session.queryCid}"
                                placeholder="Nhập CMND/CCCD..." form="searchForm">
+                    </div>
+
+                    <!-- Search Address -->
+                    <div style="flex: 1 1 250px;">
+                        <label class="form-label">
+                            <i class="bi bi-house"></i> Địa chỉ
+                        </label>
+                        <input type="text" name="queryAddress" class="form-control" th:value="${session.queryAddress}"
+                               placeholder="Nhập địa chỉ người giao hàng..." form="searchForm">
                     </div>
 
                     <!-- Search Button -->
@@ -389,9 +407,9 @@
         <!-- Results Card -->
         <div class="card">
             <div class="card-body" style="padding: 0;">
-                <div style="padding: 1.5rem; padding-bottom: 0;">
+                    <div style="padding: 1.5rem; padding-bottom: 0;">
                     <h5 style="font-weight: 600; margin-bottom: 1.5rem;">
-                        📋 Danh sách người bán
+                        📋 Danh sách người giao hàng
                     </h5>
                 </div>
 

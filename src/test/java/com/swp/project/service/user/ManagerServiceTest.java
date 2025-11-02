@@ -1,7 +1,7 @@
 package com.swp.project.service.user;
 
 import com.swp.project.dto.EditManagerDto;
-import com.swp.project.dto.ManagerRegisterDto;
+import com.swp.project.dto.CreateManagerDto;
 import com.swp.project.entity.address.CommuneWard;
 import com.swp.project.entity.address.ProvinceCity;
 import com.swp.project.entity.user.Manager;
@@ -21,7 +21,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.validation.BindingResult;
 import java.time.LocalDate;
 import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
@@ -55,7 +54,7 @@ class ManagerServiceTest {
     @InjectMocks
     private ManagerService managerService;
 
-    private ManagerRegisterDto validRegisterDto;
+    private CreateManagerDto validRegisterDto;
     private CommuneWard mockCommuneWard;
     private Manager existingManager;
     private EditManagerDto validEditManagerDto;
@@ -64,10 +63,9 @@ class ManagerServiceTest {
     @BeforeEach
     void setUp() {
         // Setup valid register DTO
-        validRegisterDto = new ManagerRegisterDto();
+        validRegisterDto = new CreateManagerDto();
         validRegisterDto.setEmail("manager@test.com");
         validRegisterDto.setPassword("password123");
-        validRegisterDto.setConfirmPassword("password123");
         validRegisterDto.setFullname("Test Manager");
         validRegisterDto.setBirthDate(LocalDate.of(1990, 1, 1));
         validRegisterDto.setCId("123456789");
@@ -159,23 +157,6 @@ class ManagerServiceTest {
             () -> managerService.createManager(validRegisterDto));
         
         assertEquals("Không tìm thấy xã", exception.getMessage());
-        verify(managerRepository, never()).save(any(Manager.class));
-    }
-
-    @Test
-    @DisplayName("createManager: Thất bại khi mật khẩu và xác nhận mật khẩu không khớp")
-    @Order(3)
-    void createManager_Fail_PasswordMismatch() {
-        // Arrange
-        validRegisterDto.setConfirmPassword("differentPassword");
-        when(communeWardRepository.findById(validRegisterDto.getCommuneWardCode()))
-            .thenReturn(Optional.of(mockCommuneWard));
-        
-        // Act & Assert
-        RuntimeException exception = assertThrows(RuntimeException.class, 
-            () -> managerService.createManager(validRegisterDto));
-        
-        assertEquals("Mật khẩu và xác nhận mật khẩu không khớp", exception.getMessage());
         verify(managerRepository, never()).save(any(Manager.class));
     }
 

@@ -112,8 +112,7 @@ public class SellerRequestService {
 
     public void rejectRequest(Long requestId) {
         SellerRequest sellerRequest = getSellerRequestById(requestId);
-        sellerRequest.setStatus(sellerRequestStatusService.getRejectedStatus());
-        sellerRequestRepository.save(sellerRequest);
+        sellerRequestRepository.delete(sellerRequest);
     }
 
     public <T> void executeAddRequest(String requestContent, Class<T> clazz, Consumer<T> addFunction)

@@ -244,10 +244,9 @@ public class CustomerService {
                                           String orderStatus,
                                           LocalDate fromDate,
                                           LocalDate toDate,
-                                          int page, int size) {
+                                          Pageable pageable) {
 
         Customer customer = customerRepository.getByEmail(email);
-        Pageable pageable = PageRequest.of(page, size, Sort.by("orderAt").descending());
 
         boolean hasStatus = orderStatus != null && !orderStatus.isBlank();
         boolean hasFromDate = fromDate != null;

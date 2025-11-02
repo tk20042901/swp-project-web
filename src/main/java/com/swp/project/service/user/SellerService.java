@@ -60,10 +60,20 @@ public class SellerService {
                 if (existsEmail(staffDto.getEmail(), staffDto.getId())) {
                     throw new RuntimeException("Email đã được dùng");
                 }
+                if (staffDto.getPassword().length() < 6 || staffDto.getPassword().length() > 50) {
+                    throw new RuntimeException("Mật khẩu phải có độ dài từ 6 đến 50 ký tự");
+                }
+            } else {
+                if (staffDto.getPassword().length() > 0) {
+                    if (staffDto.getPassword().length() < 6 || staffDto.getPassword().length() > 50) {
+                        throw new RuntimeException("Mật khẩu phải có độ dài từ 6 đến 50 ký tự");
+                    }
+                }
             }
             if (!communeWardRepository.existsByCode(staffDto.getCommuneWard())) {
                 throw new RuntimeException("Phường/Xã không tồn tại");
             }
+
             Seller seller;
             try {
                 if (staffDto.getId() == 0) {
@@ -80,6 +90,9 @@ public class SellerService {
                 } else {
                     seller = getSellerById(staffDto.getId());
                     seller.setEmail(staffDto.getEmail());
+                    if (staffDto.getPassword().length() > 0) {
+                        seller.setPassword(passwordEncoder.encode(staffDto.getPassword()));
+                    }
                     seller.setFullname(staffDto.getFullname());
                     seller.setBirthDate(staffDto.getBirthDate());
                     seller.setCid(staffDto.getCid());
@@ -123,11 +136,12 @@ public class SellerService {
                 (managerRepository.findByEmail(email) != null && managerRepository.findByEmail(email).getId() != id);
     }
 
-    public Page<Seller> getSellers(int page, int size, String searchQuery, String searchCid, String sortCriteria, int k, String sortCriteriaInPage) {
+    public Page<Seller> getSellers(int page, int size, String queryEmail, String queryName, String queryAddress, String queryCid, String sortCriteria, int k, String sortCriteriaInPage) {
         Pageable pageable = PageRequest.of(page - 1, size);
 
-        List<Seller> filteredSellers = sellerRepository.findByFullnameContainsAndCidContains(searchQuery, searchCid)
+        List<Seller> filteredSellers = sellerRepository.findByEmailContainsAndFullnameContainsAndCidContains(queryEmail, queryName, queryCid)
         .stream()
+        .filter(s -> s.getAddress().toLowerCase().contains(queryAddress.toLowerCase()))
         .sorted((o1, o2) -> {
             int comparison = 0;
             switch (sortCriteria) {
@@ -156,18 +170,10 @@ public class SellerService {
         })
         .toList();
 
-        if (searchQuery != null && !searchQuery.isEmpty() && searchCid != null && !searchCid.isEmpty()) {
+        if (queryName != null && !queryName.isEmpty() && queryCid != null && !queryCid.isEmpty()) {
             filteredSellers = filteredSellers.stream()
-                    .filter(seller -> seller.getFullname().toLowerCase().contains(searchQuery.toLowerCase())
-                            && seller.getCid().toLowerCase().contains(searchCid.toLowerCase()))
-                    .toList();
-        } else if (searchQuery != null && !searchQuery.isEmpty()) {
-            filteredSellers = filteredSellers.stream()
-                    .filter(seller -> seller.getFullname().toLowerCase().contains(searchQuery.toLowerCase()))
-                    .toList();
-        } else if (searchCid != null && !searchCid.isEmpty()) {
-            filteredSellers = filteredSellers.stream()
-                    .filter(seller -> seller.getCid().toLowerCase().contains(searchCid.toLowerCase()))
+                    .filter(seller -> seller.getFullname().toLowerCase().contains(queryName.toLowerCase())
+                            && seller.getCid().toLowerCase().contains(queryCid.toLowerCase()))
                     .toList();
         }
 

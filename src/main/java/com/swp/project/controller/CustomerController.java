@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.Objects;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -303,9 +306,19 @@ public class CustomerController {
                                   @RequestParam(required = false) String status,
                                   @RequestParam(required = false)  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fromDate,
                                   @RequestParam(required = false)  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate toDate,
+                                  @RequestParam(defaultValue = "default") String sortBy,
                                   @RequestParam(defaultValue = "0")int page,
                                   @RequestParam(defaultValue = "5")int size){
-        Page<Order> orders = customerService.searchOrderHistory(principal.getName(), status, fromDate, toDate, page, size);
+        Sort sort;
+        if ("priceAsc".equalsIgnoreCase(sortBy)) {
+            sort = Sort.by("totalAmount").ascending();
+        } else if ("priceDesc".equalsIgnoreCase(sortBy)) {
+            sort = Sort.by("totalAmount").descending();
+        }else {
+            sort = Sort.by("orderAt").descending(); //
+        }// mặc định
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<Order> orders = customerService.searchOrderHistory(principal.getName(), status, fromDate, toDate, pageable);
 
         int totalSpent=0;
         for(Order order : orders){
@@ -330,6 +343,7 @@ public class CustomerController {
         model.addAttribute("orders",orders );
         model.addAttribute("orderStatusService",orderStatusService);
         model.addAttribute("statuses",orderStatusService.getAllStatus());
+        model.addAttribute("sortBy",sortBy);
         return "pages/customer/order/order-history";
     }
     @PostMapping("/order-history/cancel/{orderId}")

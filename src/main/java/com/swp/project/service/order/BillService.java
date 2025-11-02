@@ -20,30 +20,74 @@ public class BillService {
     private final BillRepository billRepository;
     private final OrderService orderService;
 
-    public Page<Bill> getBills(int page, int size, String searchQuery, String sortCriteria, int k, String sortCriteriaInPage) {
+    public Page<Bill> getBills(int page, int size, String queryName, String queryShopName, String queryAddress, String fromDate, String toDate, String minAmount, String maxAmount, String sortCriteria, int k, String sortCriteriaInPage) {
         Pageable pageable = PageRequest.of(page - 1, size);
         List<Bill> bills = billRepository.findAll()
         .stream()
         .sorted((o1, o2) -> {
             if (sortCriteria == null) return 0;
-            return switch (sortCriteria) {
-                case "id" -> o1.getId().compareTo(o2.getId());
-                case "shopName" -> o1.getShopName().compareTo(o2.getShopName());
-                case "customer" -> o1.getOrder().getCustomer().getFullName().compareTo(o2.getOrder().getCustomer().getFullName());
-                case "paymentTime" -> o1.getPaymentTime().compareTo(o2.getPaymentTime());
-                case "totalAmount" -> orderService.calculateTotalAmount(o1.getOrder())
-                        .compareTo(orderService.calculateTotalAmount(o2.getOrder()));
-                case "address" -> o1.getOrder().getAddressString().compareTo(o2.getOrder().getAddressString());
-                default -> 0;
-            };
+            switch (sortCriteria) {
+                case "id":
+                    return o1.getId().compareTo(o2.getId());
+                case "shopName":
+                    return o1.getShopName().compareTo(o2.getShopName());
+                case "customer":
+                    return o1.getOrder().getCustomer().getFullName().compareTo(o2.getOrder().getCustomer().getFullName());
+                case "paymentTime":
+                    return o1.getPaymentTime().compareTo(o2.getPaymentTime());
+                case "totalAmount":
+                    return orderService.calculateTotalAmount(o1.getOrder()).compareTo(orderService.calculateTotalAmount(o2.getOrder()));
+                case "address":
+                    return o1.getOrder().getAddressString().compareTo(o2.getOrder().getAddressString());
+                default:
+                    return 0;
+            }
         })
         .toList();
 
-        if (searchQuery != null && !searchQuery.isEmpty()) {
-            String lowerCaseQuery = searchQuery.toLowerCase();
+        if (queryName != null && !queryName.isEmpty()) {
+            String lowerCaseQuery = queryName.toLowerCase();
             bills = bills.stream()
                     .filter(bill -> bill.getOrder().getCustomer().getFullName().toLowerCase().contains(lowerCaseQuery))
                     .toList();
+        }
+        if (queryShopName != null && !queryShopName.isEmpty()) {
+            String lowerCaseShop = queryShopName.toLowerCase();
+            bills = bills.stream()
+                    .filter(bill -> bill.getShopName() != null && bill.getShopName().toLowerCase().contains(lowerCaseShop))
+                    .toList();
+        }
+        if (queryAddress != null && !queryAddress.isEmpty()) {
+            String lowerCaseAddr = queryAddress.toLowerCase();
+            bills = bills.stream()
+                    .filter(bill -> bill.getOrder().getAddressString() != null && bill.getOrder().getAddressString().toLowerCase().contains(lowerCaseAddr))
+                    .toList();
+        }
+        if (fromDate != null && !fromDate.isEmpty()) {
+            bills = bills.stream()
+                    .filter(bill -> bill.getPaymentTime() != null && !bill.getPaymentTime().toLocalDate().isBefore(java.time.LocalDate.parse(fromDate)))
+                    .toList();
+        }
+        if (toDate != null && !toDate.isEmpty()) {
+            bills = bills.stream()
+                    .filter(bill -> bill.getPaymentTime() != null && !bill.getPaymentTime().toLocalDate().isAfter(java.time.LocalDate.parse(toDate)))
+                    .toList();
+        }
+        if (minAmount != null && !minAmount.isEmpty()) {
+            try {
+                long min = Long.parseLong(minAmount);
+                bills = bills.stream()
+                        .filter(bill -> orderService.calculateTotalAmount(bill.getOrder()) >= min)
+                        .toList();
+            } catch (NumberFormatException ignored) {}
+        }
+        if (maxAmount != null && !maxAmount.isEmpty()) {
+            try {
+                long max = Long.parseLong(maxAmount);
+                bills = bills.stream()
+                        .filter(bill -> orderService.calculateTotalAmount(bill.getOrder()) <= max)
+                        .toList();
+            } catch (NumberFormatException ignored) {}
         }
 
         int start = Math.min((page - 1) * size, bills.size());
@@ -53,16 +97,22 @@ public class BillService {
         pagedBills = pagedBills.stream()
         .sorted((o1, o2) -> {
             if (sortCriteriaInPage == null) return 0;
-            return switch (sortCriteriaInPage) {
-                case "id" -> k * o1.getId().compareTo(o2.getId());
-                case "shopName" -> k * o1.getShopName().compareTo(o2.getShopName());
-                case "customer" -> k * o1.getOrder().getCustomer().getFullName().compareTo(o2.getOrder().getCustomer().getFullName());
-                case "paymentTime" -> k * o1.getPaymentTime().compareTo(o2.getPaymentTime());
-                case "totalAmount" -> k * orderService.calculateTotalAmount(o1.getOrder())
-                        .compareTo(orderService.calculateTotalAmount(o2.getOrder()));
-                case "address" -> k * o1.getOrder().getAddressString().compareTo(o2.getOrder().getAddressString());
-                default -> 0;
-            };
+            switch (sortCriteriaInPage) {
+                case "id":
+                    return k * o1.getId().compareTo(o2.getId());
+                case "shopName":
+                    return k * o1.getShopName().compareTo(o2.getShopName());
+                case "customer":
+                    return k * o1.getOrder().getCustomer().getFullName().compareTo(o2.getOrder().getCustomer().getFullName());
+                case "paymentTime":
+                    return k * o1.getPaymentTime().compareTo(o2.getPaymentTime());
+                case "totalAmount":
+                    return k * orderService.calculateTotalAmount(o1.getOrder()).compareTo(orderService.calculateTotalAmount(o2.getOrder()));
+                case "address":
+                    return k * o1.getOrder().getAddressString().compareTo(o2.getOrder().getAddressString());
+                default:
+                    return 0;
+            }
         })
         .toList();
 

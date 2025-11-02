@@ -115,39 +115,59 @@ public class ShipperService {
 
     public void add(StaffDto staffDto) {
         if (staffDto != null) {
-                if (existsCid(staffDto.getCid(), staffDto.getId())) {
-                    throw new RuntimeException("Mã căn cước công dân đã được dùng");
-                }
-                if (existsEmail(staffDto.getEmail(), staffDto.getId())) {
-                    throw new RuntimeException("Email đã được dùng");
-                }
-            Shipper shipper;
-            try {
-                if(staffDto.getId() == 0) {
-                    shipper = Shipper.builder()
-                            .email(staffDto.getEmail())
-                            .password(passwordEncoder.encode(staffDto.getPassword()))
-                            .fullname(staffDto.getFullname())
-                            .birthDate(staffDto.getBirthDate())
-                            .cid(staffDto.getCid())
-                            .communeWard(addressService.getCommuneWardByCode(staffDto.getCommuneWard()))
-                            .specificAddress(staffDto.getSpecificAddress())
-                            .enabled(staffDto.isEnabled())
-                            .build();
+                if (staffDto.getId() == 0) {
+                    if (existsCid(staffDto.getCid(), staffDto.getId())) {
+                        throw new RuntimeException("Mã căn cước công dân đã được dùng");
+                    }
+                    if (existsEmail(staffDto.getEmail(), staffDto.getId())) {
+                        throw new RuntimeException("Email đã được dùng");
+                    }
+                    if (staffDto.getPassword().length() < 6 || staffDto.getPassword().length() > 50) {
+                        throw new RuntimeException("Mật khẩu phải có độ dài từ 6 đến 50 ký tự");
+                    }
                 } else {
-                    shipper = getShipperById(staffDto.getId());
-                    shipper.setEmail(staffDto.getEmail());
-                    shipper.setFullname(staffDto.getFullname());
-                    shipper.setBirthDate(staffDto.getBirthDate());
-                    shipper.setCid(staffDto.getCid());
-                    shipper.setCommuneWard(addressService.getCommuneWardByCode(staffDto.getCommuneWard()));
-                    shipper.setSpecificAddress(staffDto.getSpecificAddress());
-                    shipper.setEnabled(staffDto.isEnabled());
+                    if (staffDto.getPassword() != null && staffDto.getPassword().length() > 0) {
+                        if (staffDto.getPassword().length() < 6 || staffDto.getPassword().length() > 50) {
+                            throw new RuntimeException("Mật khẩu phải có độ dài từ 6 đến 50 ký tự");
+                        }
+                    }
                 }
-            } catch (Exception e) {
-                throw new RuntimeException(e.getMessage());
-            }
-            shipperRepository.save(shipper);
+
+                if (!communeWardRepository.existsByCode(staffDto.getCommuneWard())) {
+                    throw new RuntimeException("Phường/Xã không tồn tại");
+                }
+
+                Shipper shipper;
+                try {
+                    if (staffDto.getId() == 0) {
+                        shipper = Shipper.builder()
+                                .email(staffDto.getEmail())
+                                .password(passwordEncoder.encode(staffDto.getPassword()))
+                                .fullname(staffDto.getFullname())
+                                .birthDate(staffDto.getBirthDate())
+                                .cid(staffDto.getCid())
+                                .communeWard(addressService.getCommuneWardByCode(staffDto.getCommuneWard()))
+                                .specificAddress(staffDto.getSpecificAddress())
+                                .enabled(staffDto.isEnabled())
+                                .build();
+                    } else {
+                        shipper = getShipperById(staffDto.getId());
+                        shipper.setEmail(staffDto.getEmail());
+                        if (staffDto.getPassword() != null && staffDto.getPassword().length() > 0) {
+                            shipper.setPassword(passwordEncoder.encode(staffDto.getPassword()));
+                        }
+                        shipper.setFullname(staffDto.getFullname());
+                        shipper.setBirthDate(staffDto.getBirthDate());
+                        shipper.setCid(staffDto.getCid());
+                        shipper.setCommuneWard(addressService.getCommuneWardByCode(staffDto.getCommuneWard()));
+                        shipper.setSpecificAddress(staffDto.getSpecificAddress());
+                        shipper.setEnabled(staffDto.isEnabled());
+                    }
+                } catch (Exception e) {
+                    throw new RuntimeException(e.getMessage());
+                }
+
+                shipperRepository.save(shipper);
 
         }
     }
@@ -188,54 +208,43 @@ public class ShipperService {
         order.setShipper(assignedShipper);
     }
 
-    public Page<Shipper> getShippers(int page, int size, String searchQuery, String searchCid, String sortCriteria, int k, String sortCriteriaInPage) {
+    public Page<Shipper> getShippers(int page, int size, String queryEmail, String queryName, String queryAddress, String queryCid, String sortCriteria, int k, String sortCriteriaInPage) {
         Pageable pageable = PageRequest.of(page - 1, size);
 
-        List<Shipper> filteredShippers = shipperRepository.findByFullnameContainsAndCidContains(searchQuery, searchCid)
-        .stream()
-        .sorted((o1, o2) -> {
-            int comparison = 0;
-            switch (sortCriteria) {
-                case "id":
-                    comparison = o1.getId().compareTo(o2.getId());
-                    break;
-                case "email":
-                    comparison = o1.getEmail().compareTo(o2.getEmail());
-                    break;
-                case "fullname":
-                    comparison = o1.getFullname().compareTo(o2.getFullname());
-                    break;
-                case "cid":
-                    comparison = o1.getCid().compareTo(o2.getCid());
-                    break;
-                case "address":
-                    comparison = o1.getAddress().compareTo(o2.getAddress());
-                    break;
-                case "enabled":
-                    int tempO1IsEnabled = o1.isEnabled() ? 1 : 0;
-                    int tempO2IsEnabled = o2.isEnabled() ? 1 : 0;
-                    comparison = tempO1IsEnabled - tempO2IsEnabled;
-                    break;
-            }
-            return k * comparison;
-        })
-        .toList();
-
-        // Optional: filter again if needed (like SellerService)
-        if (searchQuery != null && !searchQuery.isEmpty() && searchCid != null && !searchCid.isEmpty()) {
-            filteredShippers = filteredShippers.stream()
-                    .filter(shipper -> shipper.getFullname().toLowerCase().contains(searchQuery.toLowerCase())
-                            && shipper.getCid().toLowerCase().contains(searchCid.toLowerCase()))
-                    .toList();
-        } else if (searchQuery != null && !searchQuery.isEmpty()) {
-            filteredShippers = filteredShippers.stream()
-                    .filter(shipper -> shipper.getFullname().toLowerCase().contains(searchQuery.toLowerCase()))
-                    .toList();
-        } else if (searchCid != null && !searchCid.isEmpty()) {
-            filteredShippers = filteredShippers.stream()
-                    .filter(shipper -> shipper.getCid().toLowerCase().contains(searchCid.toLowerCase()))
-                    .toList();
-        }
+        // Load all shippers and apply flexible filtering on email/name/address/cid
+        List<Shipper> filteredShippers = shipperRepository.findAll()
+                .stream()
+                .filter(s -> (queryEmail == null || queryEmail.isEmpty() || (s.getEmail() != null && s.getEmail().toLowerCase().contains(queryEmail.toLowerCase()))))
+                .filter(s -> (queryName == null || queryName.isEmpty() || (s.getFullname() != null && s.getFullname().toLowerCase().contains(queryName.toLowerCase()))))
+                .filter(s -> (queryAddress == null || queryAddress.isEmpty() || (s.getSpecificAddress() != null && s.getSpecificAddress().toLowerCase().contains(queryAddress.toLowerCase()))))
+                .filter(s -> (queryCid == null || queryCid.isEmpty() || (s.getCid() != null && s.getCid().toLowerCase().contains(queryCid.toLowerCase()))))
+                .sorted((o1, o2) -> {
+                    int comparison = 0;
+                    switch (sortCriteria) {
+                        case "id":
+                            comparison = o1.getId().compareTo(o2.getId());
+                            break;
+                        case "email":
+                            comparison = o1.getEmail().compareTo(o2.getEmail());
+                            break;
+                        case "fullname":
+                            comparison = o1.getFullname().compareTo(o2.getFullname());
+                            break;
+                        case "cid":
+                            comparison = o1.getCid().compareTo(o2.getCid());
+                            break;
+                        case "address":
+                            comparison = o1.getAddress().compareTo(o2.getAddress());
+                            break;
+                        case "enabled":
+                            int tempO1IsEnabled = o1.isEnabled() ? 1 : 0;
+                            int tempO2IsEnabled = o2.isEnabled() ? 1 : 0;
+                            comparison = tempO1IsEnabled - tempO2IsEnabled;
+                            break;
+                    }
+                    return k * comparison;
+                })
+                .toList();
 
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), filteredShippers.size());
@@ -243,27 +252,37 @@ public class ShipperService {
         List<Shipper> pagedShippers = filteredShippers.subList(start, end);
 
         pagedShippers = pagedShippers
-        .stream()
-        .sorted((o1, o2) -> {
-            int comparison = 0;
-            if (sortCriteriaInPage == null || sortCriteriaInPage.isEmpty()) {
-                return 0;
-            }
-            switch (sortCriteriaInPage) {
-                case "id" -> comparison = o1.getId().compareTo(o2.getId());
-                case "email" -> comparison = o1.getEmail().compareTo(o2.getEmail());
-                case "fullname" -> comparison = o1.getFullname().compareTo(o2.getFullname());
-                case "cid" -> comparison = o1.getCid().compareTo(o2.getCid());
-                case "address" -> comparison = o1.getAddress().compareTo(o2.getAddress());
-                case "enabled" -> {
-                    int tempO1IsEnabled = o1.isEnabled() ? 1 : 0;
-                    int tempO2IsEnabled = o2.isEnabled() ? 1 : 0;
-                    comparison = tempO1IsEnabled - tempO2IsEnabled;
-                }
-            }
-            return k * comparison;
-        })
-        .toList();
+                .stream()
+                .sorted((o1, o2) -> {
+                    int comparison = 0;
+                    if (sortCriteriaInPage == null || sortCriteriaInPage.isEmpty()) {
+                        return 0;
+                    }
+                    switch (sortCriteriaInPage) {
+                        case "id":
+                            comparison = o1.getId().compareTo(o2.getId());
+                            break;
+                        case "email":
+                            comparison = o1.getEmail().compareTo(o2.getEmail());
+                            break;
+                        case "fullname":
+                            comparison = o1.getFullname().compareTo(o2.getFullname());
+                            break;
+                        case "cid":
+                            comparison = o1.getCid().compareTo(o2.getCid());
+                            break;
+                        case "address":
+                            comparison = o1.getAddress().compareTo(o2.getAddress());
+                            break;
+                        case "enabled":
+                            int tempO1IsEnabled = o1.isEnabled() ? 1 : 0;
+                            int tempO2IsEnabled = o2.isEnabled() ? 1 : 0;
+                            comparison = tempO1IsEnabled - tempO2IsEnabled;
+                            break;
+                    }
+                    return k * comparison;
+                })
+                .toList();
 
         return new PageImpl<>(pagedShippers, pageable, filteredShippers.size());
     }

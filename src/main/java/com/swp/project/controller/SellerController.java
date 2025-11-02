@@ -9,6 +9,7 @@ import com.swp.project.service.user.SellerService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -128,16 +129,26 @@ public class SellerController {
             @RequestParam(required = false) Boolean enabled,
             @RequestParam(required = false) Long minPrice,
             @RequestParam(required = false) Long maxPrice,
+            @RequestParam(required = false) String sortBy,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size,
             Model model) {
-        Pageable pageable = PageRequest.of(page, size);
+        Sort sort;
+        if ("priceAsc".equalsIgnoreCase(sortBy)) {
+            sort = Sort.by("price").ascending();
+        } else if ("priceDesc".equalsIgnoreCase(sortBy)) {
+            sort = Sort.by("price").descending();
+        }else {
+            sort = Sort.by("id").descending(); // mặc định
+        }
+        Pageable pageable = PageRequest.of(page, size, sort);
         Page<Product> products = productService.searchProductForSeller(name, enabled,minPrice,maxPrice, pageable);
         model.addAttribute("products", products);
         model.addAttribute("name", name);
         model.addAttribute("enabled", enabled);
         model.addAttribute("minPrice", minPrice);
         model.addAttribute("maxPrice", maxPrice);
+        model.addAttribute("sortBy", sortBy);
         return "pages/seller/product/all-products";
     }
 
@@ -244,8 +255,11 @@ public class SellerController {
     }
 
     @GetMapping("/product-unit")
-    public String getProductUnitList(Model model) {
-        List<ProductUnit> productUnits = productUnitService.getAllProductUnit();
+    public String getProductUnitList(Model model,
+                                     @RequestParam(defaultValue = "0") int page,
+                                     @RequestParam(defaultValue = "5") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ProductUnit> productUnits = productUnitService.getAllProductUnit(pageable);
         model.addAttribute("productUnits", productUnits);
         return "pages/seller/product/product-unit";
     }

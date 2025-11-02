@@ -13,6 +13,6 @@ public interface SellerRepository extends JpaRepository<Seller,Long> {
 
     Seller findByCid(String Cid);
 
-    List<Seller> findByFullnameContainsAndCidContains(String name, String cId);
+    List<Seller> findByEmailContainsAndFullnameContainsAndCidContains(String queryEmail, String queryName, String queryCid);
 
 }

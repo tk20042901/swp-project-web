@@ -395,6 +395,7 @@
             </h2>
         </div>
 
+
         <!-- Filter Card -->
         <div class="filter-card">
             <div class="card-body">
@@ -402,6 +403,15 @@
                     <i class="bi bi-funnel"></i> Bộ lọc tìm kiếm
                 </h5>
                 <form th:action="@{/seller/all-products}" method="get">
+                    <div>
+                        <label class="form-label"><i class="bi bi-sort-down"></i> Sắp xếp</label>
+                        <select class="form-select" name="sortBy">
+                            <option th:value="' '">Mặc định</option>
+                            <option th:value="priceAsc"  th:selected="${sortBy == 'priceAsc'}">Giá: Thấp → Cao</option>
+                            <option th:value="priceDesc" th:selected="${sortBy == 'priceDesc'}">Giá: Cao → Thấp</option>
+                        </select>
+                    </div>
+
                     <div class="filter-grid">
                         <div>
                             <label class="form-label"><i class="bi bi-search"></i> Tên sản phẩm</label>
@@ -508,12 +518,12 @@
             <div class="card-footer" th:if="!${products.isEmpty()}">
                 <div class="pagination-controls">
                     <a th:if="!${products.first}"
-                       th:href="@{/seller/all-products(page=0, size=${products.size}, name=${name}, enabled=${enabled}, sort=${sort})}"
+                       th:href="@{/seller/all-products(page=0, size=${products.size}, name=${name}, enabled=${enabled}, sortBy=${sortBy})}"
                        class="btn btn-outline-primary" style="font-size: 13px; padding: 6px 12px;">
                         Đầu
                     </a>
                     <a th:if="${products.hasPrevious()}"
-                       th:href="@{/seller/all-products(page=${products.number - 1}, size=${products.size}, name=${name}, enabled=${enabled}, sort=${sort})}"
+                       th:href="@{/seller/all-products(page=${products.number - 1}, size=${products.size}, name=${name}, enabled=${enabled}, sortBy=${sortBy})}"
                        class="btn btn-outline-primary" style="font-size: 13px; padding: 6px 12px;">
                         ‹ Trước
                     </a>
@@ -521,12 +531,12 @@
                         Trang <strong th:text="${products.number + 1}">1</strong> / <strong th:text="${products.totalPages}">10</strong>
                     </span>
                     <a th:if="${products.hasNext()}"
-                       th:href="@{/seller/all-products(page=${products.number + 1}, size=${products.size}, name=${name}, enabled=${enabled}, sort=${sort})}"
+                       th:href="@{/seller/all-products(page=${products.number + 1}, size=${products.size}, name=${name}, enabled=${enabled}, sortBy=${sortBy})}"
                        class="btn btn-outline-primary" style="font-size: 13px; padding: 6px 12px;">
                         Sau ›
                     </a>
                     <a th:if="!${products.last}"
-                       th:href="@{/seller/all-products(page=${products.totalPages - 1}, size=${products.size}, name=${name}, enabled=${enabled}, sort=${sort})}"
+                       th:href="@{/seller/all-products(page=${products.totalPages - 1}, size=${products.size}, name=${name}, enabled=${enabled}, sortBy=${sortBy})}"
                        class="btn btn-outline-primary" style="font-size: 13px; padding: 6px 12px;">
                         Cuối
                     </a>
