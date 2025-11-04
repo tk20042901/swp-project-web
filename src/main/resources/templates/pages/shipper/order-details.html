@@ -247,7 +247,7 @@
           <div class="total-row">
             <span class="total-label">
               <i class="bi bi-calculator me-2"></i>
-              Tổng tiền:
+              Tổng tiền phải thu:
             </span>
             <span class="total-amount" th:text="${#numbers.formatInteger(totalAmount, 0, 'POINT')} + ' đ'">250.000 đ</span>
           </div>
@@ -265,52 +265,101 @@
           <i class="bi bi-lightning text-primary me-2"></i>
           Cập nhật trạng thái
         </h5>
+        <p class="text-muted small mb-4">
+          <i class="bi bi-info-circle me-1"></i>
+          Chọn nút phù hợp để cập nhật trạng thái hiện tại của đơn hàng. Bạn có thể quay lại trạng thái trước hoặc chuyển sang trạng thái tiếp theo.
+        </p>
 
-        <!-- Button to mark as picked up -->
-        <form th:action="@{/shipper/mark/{id}(id=*{id})}" method="post"
-              th:if="${shippingStatusService.isPickedUpStatus(order.currentShippingStatus) ||
-              shippingStatusService.isShippingStatus(order.currentShippingStatus)}"
-              class="d-inline">
-          <input type="hidden" name="nextStatus" th:value="awaitingPickup"/>
-          <button type="submit" class="btn btn-success px-4">
-            <i class="bi bi-box-seam me-2"></i>
-            Đang lấy hàng
-          </button>
-        </form>
+        <div class="row g-3">
+          <!-- Trạng thái trước -->
+          <div class="col-md-6"
+               th:if="${shippingStatusService.isPickedUpStatus(order.currentShippingStatus) ||
+                       shippingStatusService.isShippingStatus(order.currentShippingStatus)}">
+            <div class="mb-2">
+              <span class="badge bg-secondary">
+                <i class="bi bi-arrow-left-circle me-1"></i>
+                Trạng thái trước
+              </span>
+              <small class="text-muted ms-2">(Quay lại bước trước nếu cần)</small>
+            </div>
+            
+            <!-- Nút Chờ lấy hàng - cho trạng thái "Đã lấy hàng" -->
+            <form th:action="@{/shipper/mark/{id}(id=*{id})}" method="post" 
+                  th:if="${shippingStatusService.isPickedUpStatus(order.currentShippingStatus)}"
+                  class="d-grid mb-2">
+              <input type="hidden" name="nextStatus" th:value="awaitingPickup"/>
+              <button type="submit" class="btn btn-outline-secondary">
+                <i class="bi bi-hourglass-split me-2"></i>
+                Chờ lấy hàng
+              </button>
+            </form>
+            
+            <!-- Các nút cho trạng thái "Đang giao hàng" -->
+            <div th:if="${shippingStatusService.isShippingStatus(order.currentShippingStatus)}">
+              <!-- Nút Đã lấy hàng -->
+              <form th:action="@{/shipper/mark/{id}(id=*{id})}" method="post" class="d-grid mb-2">
+                <input type="hidden" name="nextStatus" th:value="pickedUp"/>
+                <button type="submit" class="btn btn-outline-warning">
+                  <i class="bi bi-box-seam me-2"></i>
+                  Đã lấy hàng
+                </button>
+              </form>
+              
+              <!-- Nút Chờ lấy hàng -->
+              <form th:action="@{/shipper/mark/{id}(id=*{id})}" method="post" class="d-grid mb-2">
+                <input type="hidden" name="nextStatus" th:value="awaitingPickup"/>
+                <button type="submit" class="btn btn-outline-secondary">
+                  <i class="bi bi-hourglass-split me-2"></i>
+                  Chờ lấy hàng
+                </button>
+              </form>
+            </div>
+          </div>
 
-        <!-- Button to mark as picked up -->
-        <form th:action="@{/shipper/mark/{id}(id=*{id})}" method="post"
-              th:if="${shippingStatusService.isAwaitingPickupStatus(order.currentShippingStatus) ||
-                      shippingStatusService.isShippingStatus(order.currentShippingStatus)}"
-              class="d-inline">
-          <input type="hidden" name="nextStatus" th:value="pickedUp"/>
-          <button type="submit" class="btn btn-success px-4">
-            <i class="bi bi-box-seam me-2"></i>
-            Đã lấy hàng
-          </button>
-        </form>
+          <!-- Trạng thái tiếp theo -->
+          <div class="col-md-6">
+            <div class="mb-2">
+              <span class="badge bg-success">
+                <i class="bi bi-arrow-right-circle me-1"></i>
+                Trạng thái sau
+              </span>
+              <small class="text-muted ms-2">(Chuyển sang bước tiếp theo)</small>
+            </div>
+            
+            <!-- Button to mark as picked up -->
+            <form th:action="@{/shipper/mark/{id}(id=*{id})}" method="post"
+                  th:if="${shippingStatusService.isAwaitingPickupStatus(order.currentShippingStatus)}"
+                  class="d-grid mb-2">
+              <input type="hidden" name="nextStatus" th:value="pickedUp"/>
+              <button type="submit" class="btn btn-warning">
+                <i class="bi bi-box-seam me-2"></i>
+                Đã lấy hàng
+              </button>
+            </form>
 
-        <!-- Button to mark as shipping -->
-        <form th:action="@{/shipper/mark/{id}(id=*{id})}" method="post"
-              th:if="${shippingStatusService.isPickedUpStatus(order.currentShippingStatus)}"
-              class="d-inline">
-          <input type="hidden" name="nextStatus" th:value="shipping"/>
-          <button type="submit" class="btn btn-primary px-4">
-            <i class="bi bi-truck me-2"></i>
-            Đang giao hàng
-          </button>
-        </form>
+            <!-- Button to mark as shipping -->
+            <form th:action="@{/shipper/mark/{id}(id=*{id})}" method="post"
+                  th:if="${shippingStatusService.isPickedUpStatus(order.currentShippingStatus)}"
+                  class="d-grid mb-2">
+              <input type="hidden" name="nextStatus" th:value="shipping"/>
+              <button type="submit" class="btn btn-primary">
+                <i class="bi bi-truck me-2"></i>
+                Đang giao hàng
+              </button>
+            </form>
 
-        <!-- Button to mark as delivered -->
-        <form th:action="@{/shipper/mark/{id}(id=*{id})}" method="post"
-              th:if="${shippingStatusService.isShippingStatus(order.currentShippingStatus)}"
-              class="d-inline">
-          <input type="hidden" name="nextStatus" th:value="delivered"/>
-          <button type="submit" class="btn btn-success px-4">
-            <i class="bi bi-check-circle me-2"></i>
-            Giao hàng thành công
-          </button>
-        </form>
+            <!-- Button to mark as delivered -->
+            <form th:action="@{/shipper/mark/{id}(id=*{id})}" method="post"
+                  th:if="${shippingStatusService.isShippingStatus(order.currentShippingStatus)}"
+                  class="d-grid mb-2">
+              <input type="hidden" name="nextStatus" th:value="delivered"/>
+              <button type="submit" class="btn btn-success">
+                <i class="bi bi-check-circle me-2"></i>
+                Giao hàng thành công
+              </button>
+            </form>
+          </div>
+        </div>
       </div>
     </div>
   </div>
