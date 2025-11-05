@@ -1,7 +1,7 @@
 const provinceSelect = document.getElementById('provinceCityCode');
 const wardSelect = document.getElementById('communeWardCode');
 document.addEventListener('DOMContentLoaded', function () {
-  fetch('https://ntbinh.online/admin/provinces')
+  fetch('https://fruitshop.tech/admin/provinces')
     .then(response => {
       if (!response.ok) {
         throw new Error('Lỗi http status: ' + response.status);
@@ -23,7 +23,7 @@ provinceSelect.addEventListener('change', (event) => {
   const provinceId = event.target.value;
   wardSelect.disabled = true; 
   if (provinceId !== "") {
-    fetch(`https://ntbinh.online/admin/wards?provinceId=` + provinceId)
+    fetch(`https://fruitshop.tech/admin/wards?provinceId=` + provinceId)
       .then(response => {
         if (!response.ok) {
           throw new Error('Lỗi http status: ' + response.status);
