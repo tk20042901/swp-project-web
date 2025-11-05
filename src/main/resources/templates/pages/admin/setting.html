@@ -1,9 +1,21 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cài đặt cửa hàng</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <style>
+        :root {
+            --white: #ffffff;
+            --light-gray: #f8f9fa;
+            --border-color: #dee2e6;
+            --text-dark: #212529;
+            --text-muted: #6c757d;
+            --primary-color: #0d6efd;
+            --success-color: #198754;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -12,9 +24,19 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f5f5f5;
+            background: var(--light-gray);
             min-height: 100vh;
-            padding: 20px;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: 260px;
+            padding: 30px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -23,37 +45,40 @@
         .container {
             max-width: 600px;
             width: 100%;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            background: var(--white);
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
             padding: 40px;
+            border: 1px solid var(--border-color);
         }
 
         h2 {
-            color: #333;
+            color: var(--text-dark);
             margin-bottom: 30px;
             text-align: center;
-            font-size: 28px;
+            font-size: 24px;
+            font-weight: 600;
         }
 
         .message {
             padding: 12px 20px;
-            border-radius: 8px;
+            border-radius: 6px;
             margin-bottom: 20px;
             text-align: center;
             font-weight: 500;
+            font-size: 14px;
         }
 
         .success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
+            background-color: #d1e7dd;
+            color: #0f5132;
+            border: 1px solid #badbcc;
         }
 
         .failed {
             background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
+            color: #842029;
+            border: 1px solid #f5c2c7;
         }
 
         .form-group {
@@ -63,44 +88,45 @@
         .form-group span {
             display: block;
             margin-bottom: 8px;
-            color: #555;
-            font-weight: 600;
+            color: var(--text-dark);
+            font-weight: 500;
             font-size: 14px;
         }
 
         .form-group input {
             width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
+            padding: 10px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
             font-size: 14px;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
+            background: var(--white);
         }
 
         .form-group input:focus {
             outline: none;
-            border-color: #4a90e2;
-            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.1);
         }
 
         button[type="submit"] {
             width: 100%;
-            padding: 14px;
-            background: #4a90e2;
+            padding: 12px;
+            background: var(--primary-color);
             color: white;
             border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 500;
             cursor: pointer;
             transition: all 0.2s ease;
             margin-top: 10px;
         }
 
         button[type="submit"]:hover {
-            background: #357abd;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+            background: #0b5ed7;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(13, 110, 253, 0.3);
         }
 
         button[type="submit"]:active {
@@ -108,51 +134,64 @@
         }
 
         @media (max-width: 768px) {
+            .main-content {
+                margin-left: 70px;
+                padding: 20px;
+            }
+
             .container {
-                padding: 25px;
+                padding: 30px;
             }
 
             h2 {
-                font-size: 24px;
+                font-size: 20px;
             }
         }
     </style>
 </head>
 <body>
-<div class="container">
-    <h2>Thông tin cửa hàng</h2>
+<div class="layout">
+    <div th:replace="~{fragments/admin-sidebar :: admin-sidebar}"></div>
 
-    <p th:if="${success}" th:text="${success}" class="message success"></p>
-    <p th:if="${failed}" th:text="${failed}" class="message failed"></p>
+    <div class="main-content">
+        <div class="container">
+            <h2><i class="bi bi-gear"></i> Cài đặt cửa hàng</h2>
 
-    <form th:action="@{/admin/updateSetting}" method="post">
-        <div class="form-group">
-            <span>Tên cửa hàng</span>
-            <input type="text" id="shopName" name="shopName" th:value="${shopName}" required/>
+            <p th:if="${success}" th:text="${success}" class="message success"></p>
+            <p th:if="${failed}" th:text="${failed}" class="message failed"></p>
+
+            <form th:action="@{/admin/updateSetting}" method="post">
+                <div class="form-group">
+                    <span>Tên cửa hàng</span>
+                    <input type="text" id="shopName" name="shopName" th:value="${shopName}" required/>
+                </div>
+
+                <div class="form-group">
+                    <span>Địa chỉ cửa hàng</span>
+                    <input type="text" id="shopAddress" name="shopAddress" th:value="${shopAddress}" required/>
+                </div>
+
+                <div class="form-group">
+                    <span>Số điện thoại cửa hàng</span>
+                    <input type="text" id="shopPhone" name="shopPhone" th:value="${shopPhone}" required/>
+                </div>
+
+                <div class="form-group">
+                    <span>Email của cửa hàng</span>
+                    <input type="email" id="shopEmail" name="shopEmail" th:value="${shopEmail}" required/>
+                </div>
+
+                <div class="form-group">
+                    <span>Slogan của cửa hàng</span>
+                    <input type="text" id="shopSlogan" name="shopSlogan" th:value="${shopSlogan}"/>
+                </div>
+
+                <button type="submit">
+                    <i class="bi bi-check-circle"></i> Cập nhật thông tin
+                </button>
+            </form>
         </div>
-
-        <div class="form-group">
-            <span>Địa chỉ cửa hàng</span>
-            <input type="text" id="shopAddress" name="shopAddress" th:value="${shopAddress}" required/>
-        </div>
-
-        <div class="form-group">
-            <span>Số điện thoại cửa hàng</span>
-            <input type="text" id="shopPhone" name="shopPhone" th:value="${shopPhone}" required/>
-        </div>
-
-        <div class="form-group">
-            <span>Email của cửa hàng</span>
-            <input type="email" id="shopEmail" name="shopEmail" th:value="${shopEmail}" required/>
-        </div>
-
-        <div class="form-group">
-            <span>Slogan của cửa hàng</span>
-            <input type="text" id="shopSlogan" name="shopSlogan" th:value="${shopSlogan}"/>
-        </div>
-
-        <button type="submit">Cập nhật thông tin</button>
-    </form>
+    </div>
 </div>
 </body>
 </html>
