@@ -10,7 +10,7 @@ async function loadAllCategory() {
     categoryContainer.appendChild(loadingOption);
     let categoryData = [];
     try {
-        const categories = await fetch('https://ntbinh.online/api/categories')
+        const categories = await fetch('https://fruitshop.tech/api/categories')
         categoryData = await categories.json();
     } catch (error) {
         console.error('Error fetching categories:', error);
@@ -28,7 +28,7 @@ async function loadAllCategory() {
     });
 }
 async function loadProductsByCategory(categoryId, container, sortBy = 'default') {
-    let url = `https://ntbinh.online/api/products?page=0&size=6&sortBy=${sortBy}`;
+    let url = `https://fruitshop.tech/api/products?page=0&size=6&sortBy=${sortBy}`;
     if (categoryId && categoryId != 0) {
         url += `&categoryId=${categoryId}`;
     }
@@ -66,7 +66,7 @@ async function loadProductsByCategory(categoryId, container, sortBy = 'default')
 
 async function initBestSellerContainer() {
     const container = document.getElementById('bestSellerContainer');
-    let url = `https://ntbinh.online/api/products?page=0&size=6&sortBy=best-seller`;
+    let url = `https://fruitshop.tech/api/products?page=0&size=6&sortBy=best-seller`;
     let products = [];
     try {
         const response = await fetch(url);
@@ -111,7 +111,7 @@ async function initBestSellerContainer() {
 
 async function initNewestContainer() {
     const container = document.getElementById('newestProductContainer');
-    let url = `https://ntbinh.online/api/products?page=0&size=6&sortBy=newest`;
+    let url = `https://fruitshop.tech/api/products?page=0&size=6&sortBy=newest`;
     let products = [];
     try {
         const response = await fetch(url);
