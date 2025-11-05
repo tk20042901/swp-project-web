@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    fetch('https://ntbinh.online/customer/cartItemNumber')
+    fetch('https://fruitshop.tech/customer/cartItemNumber')
         .then(response => {
             if (!response.ok) {
                 throw new Error('HTTP error status: ' + response.status);
