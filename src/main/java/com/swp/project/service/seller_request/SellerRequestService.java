@@ -26,6 +26,10 @@ public class SellerRequestService {
         return sellerRequestRepository.findAll();
     }
 
+    public List<SellerRequest> getASellerRequestsOrderByDateDesc(){
+        return sellerRequestRepository.findAllByOrderByCreatedAtDesc();
+    }
+
     public List<SellerRequest> getSellerRequestByEntityName(Class<?> entityClass) {
         return sellerRequestRepository.findByEntityName(entityClass.getSimpleName());
     }

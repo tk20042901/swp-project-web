@@ -485,7 +485,7 @@ public class ManagerController {
     @GetMapping("/all-products-request")
     public String getAllProductsRequest(
             Model model) {
-        model.addAttribute("sellerRequests", sellerRequestService.getAllSellerRequest());
+        model.addAttribute("sellerRequests", sellerRequestService.getASellerRequestsOrderByDateDesc());
         return "pages/manager/all-products-request";
     }
 

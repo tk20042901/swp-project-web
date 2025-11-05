@@ -38,7 +38,7 @@ public class ViewProductRequestDetailDto {
         if (!oldProduct.getDescription().equals(newProduct.getDescription())) {
             oldDescription = oldProduct.getDescription();
         }
-        if (oldProduct.getPrice() != newProduct.getPrice()) {
+        if (oldProduct.getPrice().equals(newProduct.getPrice())) {
             oldPrice = String.valueOf(oldProduct.getPrice());
         }
         if (!oldProduct.getUnit().getName().equals(newProduct.getUnit().getName())) {

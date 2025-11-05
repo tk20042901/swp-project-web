@@ -13,4 +13,6 @@ public interface SellerRequestRepository extends JpaRepository<SellerRequest,Lon
     List<SellerRequest> findByEntityName(String simpleName);
 
     List<SellerRequest> findBySellerEmail(String email);
+
+    List<SellerRequest> findAllByOrderByCreatedAtDesc();
 }
