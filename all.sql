@@ -1,3 +1,34 @@
+TRUNCATE TABLE
+    admin,
+    bill,
+    category,
+    commune_ward,
+    customer,
+    manager,
+    order_item,
+    order_status,
+    orders,
+    orders_shipping,
+    payment_method,
+    pending_register,
+    product,
+    product_categories,
+    product_unit,
+    province_city,
+    seller,
+    seller_request,
+    seller_request_status,
+    seller_request_type,
+    setting,
+    shipper,
+    shipping,
+    shipping_status,
+    shopping_cart_item,
+    sub_image,
+    users
+RESTART IDENTITY
+CASCADE;
+
 insert into province_city (code, name)
 values ('01', 'Thành phố Hà Nội');
 insert into commune_ward (code, name, province_city_code)
@@ -4353,125 +4384,125 @@ insert into orders_shipping (order_id, shipping_id) values
 --------------------------------------------
 
 -- Order items cho đơn hàng của: Trần Minh Nam
-INSERT INTO order_item (quantity, order_id, product_id, price) VALUES (4, (SELECT id FROM orders WHERE full_name = 'Trần Minh Nam'), 22, (SELECT price FROM product WHERE id = 22));
-INSERT INTO order_item (quantity, order_id, product_id, price) VALUES (3, (SELECT id FROM orders WHERE full_name = 'Trần Minh Nam'), 5, (SELECT price FROM product WHERE id = 5));
+INSERT INTO order_item (quantity, order_id, product_id,price) VALUES (4, (SELECT id FROM orders WHERE full_name = 'Trần Minh Nam'), 22, (SELECT price FROM product WHERE id = 22));
+INSERT INTO order_item (quantity, order_id, product_id,price) VALUES (3, (SELECT id FROM orders WHERE full_name = 'Trần Minh Nam'), 5, (SELECT price FROM product WHERE id = 5));
 
 -- Order items cho đơn hàng của: Lê Thị Lan
-INSERT INTO order_item (quantity, order_id, product_id, price) VALUES (6, (SELECT id FROM orders WHERE full_name = 'Lê Thị Lan'), 12, (SELECT price FROM product WHERE id = 12));
+INSERT INTO order_item (quantity, order_id, product_id,price) VALUES (6, (SELECT id FROM orders WHERE full_name = 'Lê Thị Lan'), 12, (SELECT price FROM product WHERE id = 12));
 
 -- Order items cho đơn hàng của: Phạm Văn Dũng
-INSERT INTO order_item (quantity, order_id, product_id, price) VALUES (5, (SELECT id FROM orders WHERE full_name = 'Phạm Văn Dũng'), 30, (SELECT price FROM product WHERE id = 30));
-INSERT INTO order_item (quantity, order_id, product_id, price) VALUES (3, (SELECT id FROM orders WHERE full_name = 'Phạm Văn Dũng'), 1, (SELECT price FROM product WHERE id = 1));
-INSERT INTO order_item (quantity, order_id, product_id, price) VALUES (4, (SELECT id FROM orders WHERE full_name = 'Phạm Văn Dũng'), 18, (SELECT price FROM product WHERE id = 18));
+INSERT INTO order_item (quantity, order_id, product_id,price) VALUES (5, (SELECT id FROM orders WHERE full_name = 'Phạm Văn Dũng'), 30, (SELECT price FROM product WHERE id = 30));
+INSERT INTO order_item (quantity, order_id, product_id,price) VALUES (3, (SELECT id FROM orders WHERE full_name = 'Phạm Văn Dũng'), 1, (SELECT price FROM product WHERE id = 1));
+INSERT INTO order_item (quantity, order_id, product_id,price) VALUES (4, (SELECT id FROM orders WHERE full_name = 'Phạm Văn Dũng'), 18, (SELECT price FROM product WHERE id = 18));
 
 -- Order items cho đơn hàng của: Hoàng Ngọc Anh
-INSERT INTO order_item (quantity, order_id, product_id, price) VALUES (3, (SELECT id FROM orders WHERE full_name = 'Hoàng Ngọc Anh'), 35, (SELECT price FROM product WHERE id = 35));
+INSERT INTO order_item (quantity, order_id, product_id,price) VALUES (3, (SELECT id FROM orders WHERE full_name = 'Hoàng Ngọc Anh'), 35, (SELECT price FROM product WHERE id = 35));
 
 -- Order items cho đơn hàng của: Vũ Hữu Bình
-INSERT INTO order_item (quantity, order_id, product_id, price) VALUES (5, (SELECT id FROM orders WHERE full_name = 'Vũ Hữu Bình'), 9, (SELECT price FROM product WHERE id = 9));
-INSERT INTO order_item (quantity, order_id, product_id, price) VALUES (4, (SELECT id FROM orders WHERE full_name = 'Vũ Hữu Bình'), 27, (SELECT price FROM product WHERE id = 27));
+INSERT INTO order_item (quantity, order_id, product_id,price) VALUES (5, (SELECT id FROM orders WHERE full_name = 'Vũ Hữu Bình'), 9, (SELECT price FROM product WHERE id = 9));
+INSERT INTO order_item (quantity, order_id, product_id,price) VALUES (4, (SELECT id FROM orders WHERE full_name = 'Vũ Hữu Bình'), 27, (SELECT price FROM product WHERE id = 27));
 
 -- Order items cho đơn hàng của: Bùi Văn Cường
-INSERT INTO order_item (quantity, order_id, product_id, price) VALUES (3, (SELECT id FROM orders WHERE full_name = 'Bùi Văn Cường'), 8, (SELECT price FROM product WHERE id = 8));
-INSERT INTO order_item (quantity, order_id, product_id, price) VALUES (5, (SELECT id FROM orders WHERE full_name = 'Bùi Văn Cường'), 14, (SELECT price FROM product WHERE id = 14));
+INSERT INTO order_item (quantity, order_id, product_id,price) VALUES (3, (SELECT id FROM orders WHERE full_name = 'Bùi Văn Cường'), 8, (SELECT price FROM product WHERE id = 8));
+INSERT INTO order_item (quantity, order_id, product_id,price) VALUES (5, (SELECT id FROM orders WHERE full_name = 'Bùi Văn Cường'), 14, (SELECT price FROM product WHERE id = 14));
 
 -- Order items cho đơn hàng của: Đỗ Thanh Mai
-INSERT INTO order_item (quantity, order_id, product_id, price) VALUES (4, (SELECT id FROM orders WHERE full_name = 'Đỗ Thanh Mai'), 31, (SELECT price FROM product WHERE id = 31));
+INSERT INTO order_item (quantity, order_id, product_id,price) VALUES (4, (SELECT id FROM orders WHERE full_name = 'Đỗ Thanh Mai'), 31, (SELECT price FROM product WHERE id = 31));
 
 -- Order items cho đơn hàng của: Nguyễn Hữu Phong
-INSERT INTO order_item (quantity, order_id, product_id, price) VALUES (6, (SELECT id FROM orders WHERE full_name = 'Nguyễn Hữu Phong'), 2, (SELECT price FROM product WHERE id = 2));
-INSERT INTO order_item (quantity, order_id, product_id, price) VALUES (3, (SELECT id FROM orders WHERE full_name = 'Nguyễn Hữu Phong'), 16, (SELECT price FROM product WHERE id = 16));
-INSERT INTO order_item (quantity, order_id, product_id, price) VALUES (5, (SELECT id FROM orders WHERE full_name = 'Nguyễn Hữu Phong'), 25, (SELECT price FROM product WHERE id = 25));
+INSERT INTO order_item (quantity, order_id, product_id,price) VALUES (6, (SELECT id FROM orders WHERE full_name = 'Nguyễn Hữu Phong'), 2, (SELECT price FROM product WHERE id = 2));
+INSERT INTO order_item (quantity, order_id, product_id,price) VALUES (3, (SELECT id FROM orders WHERE full_name = 'Nguyễn Hữu Phong'), 16, (SELECT price FROM product WHERE id = 16));
+INSERT INTO order_item (quantity, order_id, product_id,price) VALUES (5, (SELECT id FROM orders WHERE full_name = 'Nguyễn Hữu Phong'), 25, (SELECT price FROM product WHERE id = 25));
 
 -- Order items cho đơn hàng của: Trần Thị Yến
-INSERT INTO order_item (quantity, order_id, product_id, price) VALUES (4, (SELECT id FROM orders WHERE full_name = 'Trần Thị Yến'), 7, (SELECT price FROM product WHERE id = 7));
+INSERT INTO order_item (quantity, order_id, product_id,price) VALUES (4, (SELECT id FROM orders WHERE full_name = 'Trần Thị Yến'), 7, (SELECT price FROM product WHERE id = 7));
 
 -- Order items cho đơn hàng của: Lê Văn Sơn
-INSERT INTO order_item (quantity, order_id, product_id, price) VALUES (5, (SELECT id FROM orders WHERE full_name = 'Lê Văn Sơn'), 20, (SELECT price FROM product WHERE id = 20));
-INSERT INTO order_item (quantity, order_id, product_id, price) VALUES (3, (SELECT id FROM orders WHERE full_name = 'Lê Văn Sơn'), 33, (SELECT price FROM product WHERE id = 33));
+INSERT INTO order_item (quantity, order_id, product_id,price) VALUES (5, (SELECT id FROM orders WHERE full_name = 'Lê Văn Sơn'), 20, (SELECT price FROM product WHERE id = 20));
+INSERT INTO order_item (quantity, order_id, product_id,price) VALUES (3, (SELECT id FROM orders WHERE full_name = 'Lê Văn Sơn'), 33, (SELECT price FROM product WHERE id = 33));
 
 -- Order items cho đơn hàng của: Phạm Ngọc Quỳnh
-INSERT INTO order_item (quantity, order_id, product_id, price) VALUES (6, (SELECT id FROM orders WHERE full_name = 'Phạm Ngọc Quỳnh'), 11, (SELECT price FROM product WHERE id = 11));
+INSERT INTO order_item (quantity, order_id, product_id,price) VALUES (6, (SELECT id FROM orders WHERE full_name = 'Phạm Ngọc Quỳnh'), 11, (SELECT price FROM product WHERE id = 11));
 
 -- Order items cho đơn hàng của: Hoàng Thị Giang
-INSERT INTO order_item (quantity, order_id, product_id, price) VALUES (4, (SELECT id FROM orders WHERE full_name = 'Hoàng Thị Giang'), 28, (SELECT price FROM product WHERE id = 28));
-INSERT INTO order_item (quantity, order_id, product_id, price) VALUES (3, (SELECT id FROM orders WHERE full_name = 'Hoàng Thị Giang'), 4, (SELECT price FROM product WHERE id = 4));
+INSERT INTO order_item (quantity, order_id, product_id,price) VALUES (4, (SELECT id FROM orders WHERE full_name = 'Hoàng Thị Giang'), 28, (SELECT price FROM product WHERE id = 28));
+INSERT INTO order_item (quantity, order_id, product_id,price) VALUES (3, (SELECT id FROM orders WHERE full_name = 'Hoàng Thị Giang'), 4, (SELECT price FROM product WHERE id = 4));
 
 -- Order items cho đơn hàng của: Đặng Anh Tuấn
-INSERT INTO order_item (quantity, order_id, product_id, price) VALUES (6, (SELECT id FROM orders WHERE full_name = 'Đặng Anh Tuấn'), 24, (SELECT price FROM product WHERE id = 24));
-INSERT INTO order_item (quantity, order_id, product_id, price) VALUES (3, (SELECT id FROM orders WHERE full_name = 'Đặng Anh Tuấn'), 36, (SELECT price FROM product WHERE id = 36));
+INSERT INTO order_item (quantity, order_id, product_id,price) VALUES (6, (SELECT id FROM orders WHERE full_name = 'Đặng Anh Tuấn'), 24, (SELECT price FROM product WHERE id = 24));
+INSERT INTO order_item (quantity, order_id, product_id,price) VALUES (3, (SELECT id FROM orders WHERE full_name = 'Đặng Anh Tuấn'), 36, (SELECT price FROM product WHERE id = 36));
 
 -- Order items cho đơn hàng của: Bùi Thùy Trang
-INSERT INTO order_item (quantity, order_id, product_id, price) VALUES (4, (SELECT id FROM orders WHERE full_name = 'Bùi Thùy Trang'), 6, (SELECT price FROM product WHERE id = 6));
+INSERT INTO order_item (quantity, order_id, product_id,price) VALUES (4, (SELECT id FROM orders WHERE full_name = 'Bùi Thùy Trang'), 6, (SELECT price FROM product WHERE id = 6));
 
 -- Order items cho đơn hàng của: Đỗ Văn Việt
-INSERT INTO order_item (quantity, order_id, product_id, price) VALUES (5, (SELECT id FROM orders WHERE full_name = 'Đỗ Văn Việt'), 29, (SELECT price FROM product WHERE id = 29));
-INSERT INTO order_item (quantity, order_id, product_id, price) VALUES (4, (SELECT id FROM orders WHERE full_name = 'Đỗ Văn Việt'), 10, (SELECT price FROM product WHERE id = 10));
-INSERT INTO order_item (quantity, order_id, product_id, price) VALUES (3, (SELECT id FROM orders WHERE full_name = 'Đỗ Văn Việt'), 17, (SELECT price FROM product WHERE id = 17));
+INSERT INTO order_item (quantity, order_id, product_id,price) VALUES (5, (SELECT id FROM orders WHERE full_name = 'Đỗ Văn Việt'), 29, (SELECT price FROM product WHERE id = 29));
+INSERT INTO order_item (quantity, order_id, product_id,price) VALUES (4, (SELECT id FROM orders WHERE full_name = 'Đỗ Văn Việt'), 10, (SELECT price FROM product WHERE id = 10));
+INSERT INTO order_item (quantity, order_id, product_id,price) VALUES (3, (SELECT id FROM orders WHERE full_name = 'Đỗ Văn Việt'), 17, (SELECT price FROM product WHERE id = 17));
 
 -- Order items cho đơn hàng của: Nguyễn Thị Oanh
-INSERT INTO order_item (quantity, order_id, product_id, price) VALUES (6, (SELECT id FROM orders WHERE full_name = 'Nguyễn Thị Oanh'), 32, (SELECT price FROM product WHERE id = 32));
+INSERT INTO order_item (quantity, order_id, product_id,price) VALUES (6, (SELECT id FROM orders WHERE full_name = 'Nguyễn Thị Oanh'), 32, (SELECT price FROM product WHERE id = 32));
 
 -- Order items cho đơn hàng của: Trần Hữu Nam
-INSERT INTO order_item (quantity, order_id, product_id, price) VALUES (4, (SELECT id FROM orders WHERE full_name = 'Trần Hữu Nam'), 21, (SELECT price FROM product WHERE id = 21));
+INSERT INTO order_item (quantity, order_id, product_id,price) VALUES (4, (SELECT id FROM orders WHERE full_name = 'Trần Hữu Nam'), 21, (SELECT price FROM product WHERE id = 21));
 
 -- Order items cho đơn hàng của: Lê Bảo An
-INSERT INTO order_item (quantity, order_id, product_id, price) VALUES (3, (SELECT id FROM orders WHERE full_name = 'Lê Bảo An'), 3, (SELECT price FROM product WHERE id = 3));
-INSERT INTO order_item (quantity, order_id, product_id, price) VALUES (5, (SELECT id FROM orders WHERE full_name = 'Lê Bảo An'), 26, (SELECT price FROM product WHERE id = 26));
+INSERT INTO order_item (quantity, order_id, product_id,price) VALUES (3, (SELECT id FROM orders WHERE full_name = 'Lê Bảo An'), 3, (SELECT price FROM product WHERE id = 3));
+INSERT INTO order_item (quantity, order_id, product_id,price) VALUES (5, (SELECT id FROM orders WHERE full_name = 'Lê Bảo An'), 26, (SELECT price FROM product WHERE id = 26));
 
 -- Order items cho đơn hàng của: Phạm Thanh Sơn
-INSERT INTO order_item (quantity, order_id, product_id, price) VALUES (6, (SELECT id FROM orders WHERE full_name = 'Phạm Thanh Sơn'), 15, (SELECT price FROM product WHERE id = 15));
+INSERT INTO order_item (quantity, order_id, product_id,price) VALUES (6, (SELECT id FROM orders WHERE full_name = 'Phạm Thanh Sơn'), 15, (SELECT price FROM product WHERE id = 15));
 
 -- Order items cho đơn hàng của: Vũ Văn Khoa
-INSERT INTO order_item (quantity, order_id, product_id, price) VALUES (5, (SELECT id FROM orders WHERE full_name = 'Vũ Văn Khoa'), 23, (SELECT price FROM product WHERE id = 23));
-INSERT INTO order_item (quantity, order_id, product_id, price) VALUES (3, (SELECT id FROM orders WHERE full_name = 'Vũ Văn Khoa'), 1, (SELECT price FROM product WHERE id = 1));
+INSERT INTO order_item (quantity, order_id, product_id,price) VALUES (5, (SELECT id FROM orders WHERE full_name = 'Vũ Văn Khoa'), 23, (SELECT price FROM product WHERE id = 23));
+INSERT INTO order_item (quantity, order_id, product_id,price) VALUES (3, (SELECT id FROM orders WHERE full_name = 'Vũ Văn Khoa'), 1, (SELECT price FROM product WHERE id = 1));
 
 -- Order items cho đơn hàng của: Võ Ngọc Lan
-INSERT INTO order_item (quantity, order_id, product_id, price) VALUES (4, (SELECT id FROM orders WHERE full_name = 'Võ Ngọc Lan'), 19, (SELECT price FROM product WHERE id = 19));
+INSERT INTO order_item (quantity, order_id, product_id,price) VALUES (4, (SELECT id FROM orders WHERE full_name = 'Võ Ngọc Lan'), 19, (SELECT price FROM product WHERE id = 19));
 
 -- Order items cho đơn hàng của: Đặng Minh Dũng
-INSERT INTO order_item (quantity, order_id, product_id, price) VALUES (6, (SELECT id FROM orders WHERE full_name = 'Đặng Minh Dũng'), 8, (SELECT price FROM product WHERE id = 8));
+INSERT INTO order_item (quantity, order_id, product_id,price) VALUES (6, (SELECT id FROM orders WHERE full_name = 'Đặng Minh Dũng'), 8, (SELECT price FROM product WHERE id = 8));
 
 -- Order items cho đơn hàng của: Bùi Thị Mai
-INSERT INTO order_item (quantity, order_id, product_id, price) VALUES (3, (SELECT id FROM orders WHERE full_name = 'Bùi Thị Mai'), 20, (SELECT price FROM product WHERE id = 20));
-INSERT INTO order_item (quantity, order_id, product_id, price) VALUES (5, (SELECT id FROM orders WHERE full_name = 'Bùi Thị Mai'), 13, (SELECT price FROM product WHERE id = 13));
+INSERT INTO order_item (quantity, order_id, product_id,price) VALUES (3, (SELECT id FROM orders WHERE full_name = 'Bùi Thị Mai'), 20, (SELECT price FROM product WHERE id = 20));
+INSERT INTO order_item (quantity, order_id, product_id,price) VALUES (5, (SELECT id FROM orders WHERE full_name = 'Bùi Thị Mai'), 13, (SELECT price FROM product WHERE id = 13));
 
 -- Order items cho đơn hàng của: Đỗ Văn Hải
-INSERT INTO order_item (quantity, order_id, product_id, price) VALUES (4, (SELECT id FROM orders WHERE full_name = 'Đỗ Văn Hải'), 5, (SELECT price FROM product WHERE id = 5));
-INSERT INTO order_item (quantity, order_id, product_id, price) VALUES (6, (SELECT id FROM orders WHERE full_name = 'Đỗ Văn Hải'), 22, (SELECT price FROM product WHERE id = 22));
+INSERT INTO order_item (quantity, order_id, product_id,price) VALUES (4, (SELECT id FROM orders WHERE full_name = 'Đỗ Văn Hải'), 5, (SELECT price FROM product WHERE id = 5));
+INSERT INTO order_item (quantity, order_id, product_id,price) VALUES (6, (SELECT id FROM orders WHERE full_name = 'Đỗ Văn Hải'), 22, (SELECT price FROM product WHERE id = 22));
 
 -- Order items cho đơn hàng của: Nguyễn Thị Quỳnh
-INSERT INTO order_item (quantity, order_id, product_id, price) VALUES (5, (SELECT id FROM orders WHERE full_name = 'Nguyễn Thị Quỳnh'), 11, (SELECT price FROM product WHERE id = 11));
+INSERT INTO order_item (quantity, order_id, product_id,price) VALUES (5, (SELECT id FROM orders WHERE full_name = 'Nguyễn Thị Quỳnh'), 11, (SELECT price FROM product WHERE id = 11));
 
 -- Order items cho đơn hàng của: Trần Anh Việt
-INSERT INTO order_item (quantity, order_id, product_id, price) VALUES (4, (SELECT id FROM orders WHERE full_name = 'Trần Anh Việt'), 31, (SELECT price FROM product WHERE id = 31));
+INSERT INTO order_item (quantity, order_id, product_id,price) VALUES (4, (SELECT id FROM orders WHERE full_name = 'Trần Anh Việt'), 31, (SELECT price FROM product WHERE id = 31));
 
 -- Order items cho đơn hàng của: Phạm Hữu Cường
-INSERT INTO order_item (quantity, order_id, product_id, price) VALUES (6, (SELECT id FROM orders WHERE full_name = 'Phạm Hữu Cường'), 28, (SELECT price FROM product WHERE id = 28));
-INSERT INTO order_item (quantity, order_id, product_id, price) VALUES (5, (SELECT id FROM orders WHERE full_name = 'Phạm Hữu Cường'), 7, (SELECT price FROM product WHERE id = 7));
+INSERT INTO order_item (quantity, order_id, product_id,price) VALUES (6, (SELECT id FROM orders WHERE full_name = 'Phạm Hữu Cường'), 28, (SELECT price FROM product WHERE id = 28));
+INSERT INTO order_item (quantity, order_id, product_id,price) VALUES (5, (SELECT id FROM orders WHERE full_name = 'Phạm Hữu Cường'), 7, (SELECT price FROM product WHERE id = 7));
 
 -- Order items cho đơn hàng của: Hoàng Văn Nam
-INSERT INTO order_item (quantity, order_id, product_id, price) VALUES (4, (SELECT id FROM orders WHERE full_name = 'Hoàng Văn Nam'), 14, (SELECT price FROM product WHERE id = 14));
+INSERT INTO order_item (quantity, order_id, product_id,price) VALUES (4, (SELECT id FROM orders WHERE full_name = 'Hoàng Văn Nam'), 14, (SELECT price FROM product WHERE id = 14));
 
 -- Order items cho đơn hàng của: Vũ Thị Yến
-INSERT INTO order_item (quantity, order_id, product_id, price) VALUES (3, (SELECT id FROM orders WHERE full_name = 'Vũ Thị Yến'), 33, (SELECT price FROM product WHERE id = 33));
-INSERT INTO order_item (quantity, order_id, product_id, price) VALUES (5, (SELECT id FROM orders WHERE full_name = 'Vũ Thị Yến'), 16, (SELECT price FROM product WHERE id = 16));
-INSERT INTO order_item (quantity, order_id, product_id, price) VALUES (4, (SELECT id FROM orders WHERE full_name = 'Vũ Thị Yến'), 25, (SELECT price FROM product WHERE id = 25));
+INSERT INTO order_item (quantity, order_id, product_id,price) VALUES (3, (SELECT id FROM orders WHERE full_name = 'Vũ Thị Yến'), 33, (SELECT price FROM product WHERE id = 33));
+INSERT INTO order_item (quantity, order_id, product_id,price) VALUES (5, (SELECT id FROM orders WHERE full_name = 'Vũ Thị Yến'), 16, (SELECT price FROM product WHERE id = 16));
+INSERT INTO order_item (quantity, order_id, product_id,price) VALUES (4, (SELECT id FROM orders WHERE full_name = 'Vũ Thị Yến'), 25, (SELECT price FROM product WHERE id = 25));
 
 -- Order items cho đơn hàng của: Võ Minh Trang
-INSERT INTO order_item (quantity, order_id, product_id, price) VALUES (6, (SELECT id FROM orders WHERE full_name = 'Võ Minh Trang'), 6, (SELECT price FROM product WHERE id = 6));
+INSERT INTO order_item (quantity, order_id, product_id,price) VALUES (6, (SELECT id FROM orders WHERE full_name = 'Võ Minh Trang'), 6, (SELECT price FROM product WHERE id = 6));
 
 -- Order items cho đơn hàng của: Đặng Văn Bình
-INSERT INTO order_item (quantity, order_id, product_id, price) VALUES (4, (SELECT id FROM orders WHERE full_name = 'Đặng Văn Bình'), 17, (SELECT price FROM product WHERE id = 17));
+INSERT INTO order_item (quantity, order_id, product_id,price) VALUES (4, (SELECT id FROM orders WHERE full_name = 'Đặng Văn Bình'), 17, (SELECT price FROM product WHERE id = 17));
 
 -- Order items cho đơn hàng của: Bùi Thị Lan
-INSERT INTO order_item (quantity, order_id, product_id, price) VALUES (5, (SELECT id FROM orders WHERE full_name = 'Bùi Thị Lan'), 10, (SELECT price FROM product WHERE id = 10));
-INSERT INTO order_item (quantity, order_id, product_id, price) VALUES (3, (SELECT id FROM orders WHERE full_name = 'Bùi Thị Lan'), 29, (SELECT price FROM product WHERE id = 29));
+INSERT INTO order_item (quantity, order_id, product_id,price) VALUES (5, (SELECT id FROM orders WHERE full_name = 'Bùi Thị Lan'), 10, (SELECT price FROM product WHERE id = 10));
+INSERT INTO order_item (quantity, order_id, product_id,price) VALUES (3, (SELECT id FROM orders WHERE full_name = 'Bùi Thị Lan'), 29, (SELECT price FROM product WHERE id = 29));
 INSERT INTO seller_request_status (id, name)
 VALUES 
     (1, 'Đang Chờ Duyệt'),
     (2, 'Đã Duyệt'),
-	(3,'Đã Cập Nhật');
+	(3,'Đã Từ Chối');
 INSERT INTO seller_request_type (id, name)
 VALUES 
     (1, 'Thêm mới'),
