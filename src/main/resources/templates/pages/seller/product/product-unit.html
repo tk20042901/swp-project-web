@@ -210,6 +210,7 @@
                             <th>Mã đơn vị</th>
                             <th>Tên đơn vị</th>
                             <th>Cho phép thập phân</th>
+                            <th>Hiện đơn vị(Thêm hoặc cập nhật sản phẩm)</th>
                             <th>Thao tác</th>
                         </tr>
                     </thead>
@@ -218,6 +219,7 @@
                             <td th:text="${unit.id}"></td>
                             <td th:text="${unit.name}"></td>
                             <td th:text="${unit.allowDecimal ? 'Có' : 'Không'}"></td>
+                            <td th:text="${unit.active ? 'Có' : 'Không'}"></td>
                             <td>
                                 <a th:href="@{/seller/edit-product-unit(id=${unit.id})}" class="btn btn-sm btn-warning">
                                     <i class="bi bi-pencil"></i> Sửa

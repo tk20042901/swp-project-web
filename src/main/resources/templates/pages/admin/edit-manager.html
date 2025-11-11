@@ -10,6 +10,10 @@
     <link rel="stylesheet" href="/css/edit-manager.css">
 </head>
 <body>
+<div class="layout">
+    <!-- Thêm sidebar -->
+    <div th:replace="~{fragments/admin-sidebar :: admin-sidebar}"></div>
+
     <div class="main-content">
         <div class="container">
             <a th:href="@{/admin/manage-manager}" class="back-link">
@@ -144,14 +148,14 @@
                         </div>
                     </div>
                     <div class="col-md-6 mb-3">
-                                <label for="password" class="form-label">
-                                    Mật khẩu</span>
-                                </label>
-                                <input type="password"
-                                       class="form-control"
-                                       id="password"
-                                       th:field="*{password}"
-                                       placeholder="Để trống là không cập nhật mật khẩu"/>
+                        <label for="password" class="form-label">
+                            Mật khẩu
+                        </label>
+                        <input type="password"
+                               class="form-control"
+                               id="password"
+                               th:field="*{password}"
+                               placeholder="Để trống là không cập nhật mật khẩu"/>
                     </div>
 
                     <!-- Submit Button -->
@@ -165,8 +169,9 @@
             </div>
         </div>
     </div>
+</div>
 
-    <script th:src="@{/js/address/address-edit.js}"></script>
-    <script src="/js/bootstrap/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/address/address-edit.js}"></script>
+<script src="/js/bootstrap/bootstrap.bundle.min.js"></script>
 </body>
 </html>

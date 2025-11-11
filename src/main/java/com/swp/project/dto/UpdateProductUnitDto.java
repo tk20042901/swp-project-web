@@ -24,16 +24,14 @@ public class UpdateProductUnitDto {
     @Length(max = 20, message = "Tên đơn vị không được vượt quá 20 ký tự")
     private String name;
 
-    @NotNull(message = "Trường cho phép thập phân không được để trống")
-    private Boolean isAllowDecimal;
+    private boolean allowDecimal;
 
-    @NotNull(message = "Trường trạng thái không được để trống")
-    private Boolean isActive;
+    private boolean active;
 
     public UpdateProductUnitDto(ProductUnit productUnit) {
         this.id = productUnit.getId();
         this.name = productUnit.getName();
-        this.isAllowDecimal = productUnit.isAllowDecimal();
-        this.isActive = productUnit.isActive();
+        this.allowDecimal = productUnit.isAllowDecimal();
+        this.active = productUnit.isActive();
     }
 }

@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import io.pinecone.clients.Index;
 import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
@@ -95,10 +96,12 @@ public class AiService {
     private final ChatClient imageChatClient;
     private final VectorStore vectorStore;
     private final ProductService productService;
+    private final Index pineconeIndex;
 
     public AiService(ChatModel chatModel,
                      VectorStore vectorStore,
-                     ProductService productService) {
+                     ProductService productService,
+                     Index pineconeIndex) {
         this.productService = productService;
 
         this.vectorStore = vectorStore;
@@ -142,6 +145,8 @@ public class AiService {
                         .build())
                 .defaultUser("Hãy xác định và trả về tên trái cây trong hình ảnh này bằng tiếng Việt, không thêm bất kỳ giải thích nào. Nếu có trên 1 loại trái cây, hãy trả về tất cả và ngăn cách bằng dấu phẩy. Nếu không phải là trái cây, hãy trả về \"Không phải trái cây\".")
                 .build();
+
+        this.pineconeIndex = pineconeIndex;
     }
 
     private String getProductContent(Product product){
@@ -187,7 +192,8 @@ public class AiService {
     }
 
     @Transactional
-    public void saveAllProductsFromDatabaseToVectorStore() {
+    public void synchronizeVectorStoreWithAllProductInDatabase() {
+        pineconeIndex.deleteAll("__default__");
         productService.getAllProducts().forEach(this::saveProductToVectorStore);
     }
 

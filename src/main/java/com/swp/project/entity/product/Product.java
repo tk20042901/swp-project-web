@@ -16,7 +16,7 @@ import org.hibernate.annotations.Formula;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
-@EqualsAndHashCode(exclude = {"soldQuantity", "quantity"})
+@EqualsAndHashCode(exclude = {"soldQuantity"})
 @Entity
 public class Product implements Serializable{
 
@@ -27,7 +27,7 @@ public class Product implements Serializable{
         this.price = dto.getPrice();
         this.unit = dto.getUnit();
         this.main_image_url = dto.getMainImage();
-        this.enabled = dto.getEnabled();
+        this.enabled = dto.isEnabled();
         this.quantity = dto.getQuantity();
         this.categories = dto.getFinalCategories();
         this.heldQuantity = dto.getHeldQuantity();
@@ -74,7 +74,7 @@ public class Product implements Serializable{
     private double heldQuantity = 0;
 
     // Formula tính sold quantity trong DB - đang giao hàng,đã giao hàng và đang chuẩn bị hàng
-    @Formula("(SELECT COALESCE(SUM(oi.quantity), 0) " +
+    @Formula("(SELECT COALESCE(COUNT(DISTINCT o.id), 0) " +
             "FROM order_item oi " +
             "INNER JOIN orders o ON o.id = oi.order_id " +
             "INNER JOIN order_status os ON o.order_status_id = os.id " +

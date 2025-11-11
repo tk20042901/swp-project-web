@@ -34,12 +34,12 @@ public class Category implements Serializable{
 
     public Category(CreateCategoryDto dto) {
         this.name = dto.getName();
-        this.isActive = dto.getIsActive();
+        this.isActive = dto.isActive();
     }
 
     public Category(UpdateCategoryDto dto) {
         this.id = dto.getId();
         this.name = dto.getName();
-        this.isActive = dto.getIsActive();
+        this.isActive = dto.isActive();
     }
 }

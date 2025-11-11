@@ -69,48 +69,12 @@
             color: var(--text-dark);
         }
 
-        .stats-overview {
-            background: var(--white);
-            border-radius: 8px;
-            padding: 2rem;
-            margin-bottom: 24px;
-            border: 1px solid var(--border-color);
-        }
-
-        .stats-overview h3 {
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: var(--text-dark);
-        }
-
-        .stats-number {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            color: var(--primary-color);
-        }
-
-        .stats-label {
-            font-size: 1rem;
-            color: var(--text-muted);
-        }
-
-        .dashboard-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 24px;
-            margin-bottom: 24px;
-        }
-
         .order-stats-section {
             background: var(--white);
             border: 1px solid var(--border-color);
             border-radius: 8px;
             padding: 1.5rem;
+            margin-bottom: 24px;
         }
 
         .section-title {
@@ -125,7 +89,7 @@
 
         .order-stats-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 1rem;
         }
 
@@ -157,31 +121,47 @@
             color: var(--text-dark);
         }
 
-        .revenue-chart-section {
-            background: var(--white);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 1.5rem;
-        }
-
-        .revenue-grid {
+        .revenue-row {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1rem;
+            grid-template-columns: 1fr 2fr;
+            gap: 24px;
             margin-bottom: 24px;
         }
 
-        .revenue-item {
+        .revenue-info-section {
             background: var(--white);
-            padding: 1.5rem;
-            border-radius: 8px;
             border: 1px solid var(--border-color);
-            transition: all 0.2s ease;
+            border-radius: 8px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
         }
 
-        .revenue-item:hover {
+        .time-selector {
+            margin-bottom: 1.5rem;
+        }
+
+        .time-selector select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 14px;
+            background: var(--white);
+            cursor: pointer;
+        }
+
+        .time-selector select:focus {
+            outline: none;
             border-color: var(--primary-color);
-            box-shadow: 0 2px 8px rgba(13, 110, 253, 0.1);
+            box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.1);
+        }
+
+        .revenue-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
         .revenue-label {
@@ -194,7 +174,7 @@
         }
 
         .revenue-amount {
-            font-size: 1.8rem;
+            font-size: 2.2rem;
             font-weight: 700;
             margin-bottom: 0.5rem;
             color: var(--text-dark);
@@ -206,6 +186,13 @@
             display: flex;
             align-items: center;
             gap: 0.25rem;
+        }
+
+        .revenue-chart-section {
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
         }
 
         .charts-grid {
@@ -255,8 +242,98 @@
             margin-bottom: 1rem;
         }
 
+        .alert-message {
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem 1.25rem;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .alert-message.success {
+            background: #d1e7dd;
+            border-color: #badbcc;
+            color: #0f5132;
+        }
+
+        .alert-message.error {
+            background: #f8d7da;
+            border-color: #f5c2c7;
+            color: #842029;
+        }
+
+        .alert-message.info {
+            background: #cff4fc;
+            border-color: #b6effb;
+            color: #055160;
+        }
+
+        .alert-message i {
+            font-size: 1.25rem;
+        }
+
+        .alert-message p {
+            margin: 0;
+            flex: 1;
+            font-size: 0.95rem;
+        }
+
+        .sync-section {
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 24px;
+        }
+
+        .sync-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            box-shadow: 0 4px 6px rgba(102, 126, 234, 0.3);
+            background-color: #0d6efd;
+            color: white;
+        }
+
+        .sync-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .sync-btn:active {
+            transform: translateY(0);
+        }
+
+        .sync-btn i {
+            font-size: 1.1rem;
+        }
+
+        @media (max-width: 1400px) {
+            .order-stats-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
         @media (max-width: 1200px) {
             .charts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .revenue-row {
                 grid-template-columns: 1fr;
             }
         }
@@ -267,24 +344,12 @@
                 padding: 16px;
             }
 
-            .dashboard-row {
-                grid-template-columns: 1fr;
-            }
-
             .order-stats-grid {
                 grid-template-columns: 1fr;
             }
 
-            .revenue-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .stats-number {
-                font-size: 2rem;
-            }
-
             .revenue-amount {
-                font-size: 1.5rem;
+                font-size: 1.8rem;
             }
         }
     </style>
@@ -295,44 +360,76 @@
 
     <div class="main-content">
         <div class="header">
-            <a th:href="@{/}">
-                <i class="bi bi-arrow-left"></i> Trang chủ
-            </a>
             <h2>
                 <i class="bi bi-speedometer2"></i> Dashboard - Tổng quan quản lý
             </h2>
         </div>
 
+        <!-- Thông báo -->
+        <div th:if="${msg}" class="alert-message success">
+            <i class="bi bi-check-circle-fill"></i>
+            <p th:text="${msg}"></p>
+        </div>
 
-        <div class="dashboard-row">
-            <div class="order-stats-section">
+        <!-- Thống kê đơn hàng -->
+        <div class="order-stats-section">
+            <h5 class="section-title">
+                <i class="bi bi-clipboard-data"></i> Thống kê đơn hàng
+            </h5>
+            <div class="order-stats-grid">
+                <div class="stat-item">
+                    <h6><i class="bi bi-bag-check"></i> Tổng đơn hàng</h6>
+                    <div class="stat-value" th:text="${totalOrder}">0</div>
+                </div>
+                <div class="stat-item">
+                    <h6><i class="bi bi-x-circle"></i> Đã hủy</h6>
+                    <div class="stat-value" th:text="${totalCanceledOrder}">0</div>
+                </div>
+                <div class="stat-item">
+                    <h6><i class="bi bi-clock-history"></i> Chờ xác nhận</h6>
+                    <div class="stat-value" th:text="${pendingOrder}">0</div>
+                </div>
+                <div class="stat-item">
+                    <h6><i class="bi bi-check-circle"></i> Đã giao</h6>
+                    <div class="stat-value" th:text="${deliverOrder}">0</div>
+                </div>
+                <div class="stat-item">
+                    <h6><i class="bi bi-truck"></i> Đang giao</h6>
+                    <div class="stat-value" th:text="${shippingOrder}">0</div>
+                </div>
+                <div class="stat-item">
+                    <h6><i class="bi bi-hourglass-split"></i> Đang chuẩn bị</h6>
+                    <div class="stat-value" th:text="${processingOrder}">0</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Doanh thu và Biểu đồ -->
+        <div class="revenue-row">
+            <div class="revenue-info-section">
                 <h5 class="section-title">
-                    <i class="bi bi-clipboard-data"></i> Thống kê đơn hàng
+                    <i class="bi bi-cash-stack"></i> Doanh thu
                 </h5>
-                <div class="order-stats-grid">
-                    <div class="stat-item">
-                        <h6><i class="bi bi-bag-check"></i> Tổng đơn hàng</h6>
-                        <div class="stat-value" th:text="${totalOrder}">0</div>
+                <div class="time-selector">
+                    <form th:action="@{/admin}" method="get">
+                        <select name="timeSelected" th:onchange="this.form.submit()">
+                            <option value="day" th:selected="${timeSelected=='day'}">Hôm nay</option>
+                            <option value="week" th:selected="${timeSelected=='week'}">Tuần này</option>
+                            <option value="month" th:selected="${timeSelected=='month'}">Tháng này</option>
+                        </select>
+                    </form>
+                </div>
+                <div class="revenue-item">
+                    <div class="revenue-label">
+                        <i class="bi" th:classappend="${timeSelected=='today'} ? ' bi-calendar-day' :
+                                   (${timeSelected=='week'} ? ' bi-calendar-week' : ' bi-calendar-month')"></i>
+                        <span th:text="${label}">Doanh thu</span>
                     </div>
-                    <div class="stat-item">
-                        <h6><i class="bi bi-x-circle"></i> Đã hủy</h6>
-                        <div class="stat-value" th:text="${totalCanceledOrder}">0</div>
-                    </div>
-                    <div class="stat-item">
-                        <h6><i class="bi bi-clock-history"></i> Chờ xác nhận</h6>
-                        <div class="stat-value" th:text="${pendingOrder}">0</div>
-                    </div>
-                    <div class="stat-item">
-                        <h6><i class="bi bi-check-circle"></i> Đã giao</h6>
-                        <div class="stat-value" th:text="${deliverOrder}">0</div>
-                    </div>
-                    <div class="stat-item">
-                        <h6><i class="bi bi-truck"></i> Đang giao</h6>
-                        <div class="stat-value" th:text="${shippingOrder}">0</div>
-                    </div>
-                    <div class="stat-item">
-                        <h6><i class="bi bi-hourglass-split"></i> Đang chuẩn bị</h6>
-                        <div class="stat-value" th:text="${processingOrder}">0</div>
+                    <div class="revenue-amount"
+                         th:text="${#numbers.formatDecimal(amount, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">0 VNĐ</div>
+                    <div class="revenue-change" th:classappend="${change>=0} ? '' : ' text-danger'">
+                        <i class="bi" th:classappend="${change>=0} ? ' bi-graph-up-arrow' : ' bi-graph-down-arrow'"></i>
+                        <span th:text="${(change>=0 ? 'Tăng ' : 'Giảm ') + T(java.lang.Math).abs(change) + '% so với kỳ trước'}">—</span>
                     </div>
                 </div>
             </div>
@@ -345,38 +442,14 @@
             </div>
         </div>
 
-
-        <div>
-            <form th:action="@{/manager/report}" method="get">
-                <select name ="timeSelected" th:onchange="this.form.submit()">
-                    <option value="day"   th:selected="${timeSelected=='day'}">Hôm nay</option>
-                    <option value="week"  th:selected="${timeSelected=='week'}">Tuần này</option>
-                    <option value="month" th:selected="${timeSelected=='month'}">Tháng này</option>
-                </select>
-            </form>
-        </div>
-
-
-        <div class="revenue-item">
-            <div class="revenue-label">
-                <i class="bi" th:classappend="${timeSelected=='today'} ? ' bi-calendar-day' :
-                                   (${timeSelected=='week'} ? ' bi-calendar-week' : ' bi-calendar-month')"></i>
-                <span th:text="${selectedLabel}">Doanh thu</span>
-            </div>
-            <div class="revenue-amount"
-                 th:text="${#numbers.formatDecimal(amount, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">0 VNĐ</div>
-            <div class="revenue-change" th:classappend="${change>=0} ? '' : ' text-danger'">
-                <i class="bi" th:classappend="${change>=0} ? ' bi-graph-up-arrow' : ' bi-graph-down-arrow'"></i>
-                <span th:text="${(change>=0 ? 'Tăng ' : 'Giảm ') + T(java.lang.Math).abs(change) + '% so với kỳ trước'}">—</span>
-            </div>
-        </div>
+        <!-- Biểu đồ 7 ngày và 12 tháng -->
         <div class="charts-grid">
             <div class="chart-card">
                 <div class="chart-header">
                     <h5 class="section-title">
                         <i class="bi bi-calendar-week"></i> Doanh thu 7 ngày gần đây
                     </h5>
-                    <a class="export-btn" th:href="@{/manager/days/export-excel}">
+                    <a class="export-btn" th:href="@{/admin/days/export-excel}">
                         <i class="bi bi-file-earmark-excel"></i> Xuất Excel
                     </a>
                 </div>
@@ -388,12 +461,28 @@
                     <h5 class="section-title">
                         <i class="bi bi-calendar-range"></i> Doanh thu 12 tháng gần đây
                     </h5>
-                    <a class="export-btn" th:href="@{/manager/months/export-excel}">
+                    <a class="export-btn" th:href="@{/admin/months/export-excel}">
                         <i class="bi bi-file-earmark-excel"></i> Xuất Excel
                     </a>
                 </div>
                 <canvas id="monthsChart"></canvas>
             </div>
+        </div>
+
+        <!-- Đồng bộ cơ sở dữ liệu AI -->
+        <div class="sync-section">
+            <h5 class="section-title">
+                <i class="bi bi-robot"></i> Quản lý cơ sở dữ liệu AI
+            </h5>
+            <p style="color: var(--text-muted); margin-bottom: 1rem; font-size: 0.9rem;">
+                Đồng bộ thông tin sản phẩm trong hệ thống với cơ sở dữ liệu AI để đảm bảo thông tin sản phẩm AI đưa ra luôn chính xác.
+            </p>
+            <form method="post" th:action="@{/admin/synchronize-vector-database}" style="display: inline-block;">
+                <button type="submit" class="sync-btn">
+                    <i class="bi bi-arrow-repeat"></i>
+                    Đồng bộ cơ sở dữ liệu AI với thông tin sản phẩm trong hệ thống
+                </button>
+            </form>
         </div>
     </div>
 </div>

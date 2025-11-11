@@ -96,14 +96,14 @@
                                         Cho phép thập phân<span class="required-mark">*</span>
                                     </label>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" th:field="*{isAllowDecimal}"
+                                        <input class="form-check-input" type="radio" th:field="*{allowDecimal}"
                                             id="allowDecimalYes" value="true" required />
                                         <label class="form-check-label" for="allowDecimalYes">
                                             <strong>Có</strong> - Cho phép số lượng thập phân (Ví dụ: 1.5 Kg, 2.3 Lít)
                                         </label>
                                     </div>
                                     <div class="form-check mt-2">
-                                        <input class="form-check-input" type="radio" th:field="*{isAllowDecimal}"
+                                        <input class="form-check-input" type="radio" th:field="*{allowDecimal}"
                                             id="allowDecimalNo" value="false" required />
                                         <label class="form-check-label" for="allowDecimalNo">
                                             <strong>Không</strong> - Chỉ cho phép số nguyên (Ví dụ: 1 Cái, 5 Hộp)
@@ -121,14 +121,14 @@
                                     </label>
 
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" th:field="*{isActive}"
+                                        <input class="form-check-input" type="radio" th:field="*{active}"
                                             id="allowActiveYes" value="true" required />
                                         <label class="form-check-label" for="allowActiveYes">
                                             <strong>Có</strong> - Hiển thị đơn vị này trong danh sách khi tạo hoặc chỉnh sửa sản phẩm.
                                         </label>
                                     </div>
                                     <div class="form-check mt-2">
-                                        <input class="form-check-input" type="radio" th:field="*{isActive}"
+                                        <input class="form-check-input" type="radio" th:field="*{active}"
                                             id="allowActiveNo" value="false" required />
                                         <label class="form-check-label" for="allowActiveNo">
                                             <strong>Không</strong> - Ẩn đơn vị này khỏi danh sách khi tạo hoặc chỉnh sửa sản phẩm.

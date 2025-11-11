@@ -133,12 +133,45 @@
                 padding: 20px;
             }
         }
+        /* === SIDEBAR HEADER === */
+        /* === SIDEBAR HEADER === */
+        .sidebar-header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 0 20px;
+        }
+
+        .sidebar-header img {
+            width: 120px;
+            height: 120px;
+            object-fit: contain;
+            margin-bottom: 8px;
+            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.15));
+        }
+
+        .sidebar-header .shop-name {
+            display: block;
+            color: #1a1a1a;
+            font-size: 30px;
+            font-weight: 800;
+            text-decoration: none;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            pointer-events: none;
+            cursor: default;
+            margin: 0;
+            padding: 0;
+            border: none;
+            outline: none;
+        }
+
+
     </style>
 
     <div class="sidebar">
-        <div class="sidebar-header" style="text-align: center; margin-bottom: 10px;">
-            <img src="/images/icons/logo.png" alt="FruitShop Logo"
-                 style="width:150px; height:150px; object-fit:contain;">
+        <div class="sidebar-header">
+            <img src="/images/icons/logo.png" alt="FruitShop Logo">
+            <span class="shop-name" th:text="${shopName}"></span>
         </div>
         <h2><i class="bi bi-shield-check"></i> Admin Panel</h2>
         <a th:href="@{/admin}">
@@ -146,9 +179,6 @@
         </a>
         <a th:href="@{/admin/manage-manager}">
             <i class="bi bi-people"></i> <span style="margin-left: 12px;">Quản lý Manager</span>
-        </a>
-        <a th:href="@{/admin/statistic-report}">
-            <i class="bi bi-bar-chart"></i> <span style="margin-left: 12px;">Thống kê</span>
         </a>
         <a th:href="@{/admin/setting}">
             <i class="bi bi-gear"></i> <span style="margin-left: 12px;">Cài đặt</span>

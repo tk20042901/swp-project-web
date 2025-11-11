@@ -33,11 +33,19 @@ public class SettingService {
         return Objects.requireNonNull(settingRepository.findById("shop_slogan").orElse(null)).getValue();
     }
 
+    public String getShopFacebook(){
+        return Objects.requireNonNull(settingRepository.findById("shop_facebook").orElse(null)).getValue();
+    }
+    public String getShopInstagram(){
+        return Objects.requireNonNull(settingRepository.findById("shop_instagram").orElse(null)).getValue();
+    }
     public void updateSetting(AdminSettingDto ad){
         settingRepository.save(new Setting("shop_name", ad.getShopName()));
         settingRepository.save(new Setting("shop_address", ad.getShopAddress()));
         settingRepository.save(new Setting("shop_phone", ad.getShopPhone()));
         settingRepository.save(new Setting("shop_email", ad.getShopEmail()));
         settingRepository.save(new Setting("shop_slogan", ad.getShopSlogan()));
+        settingRepository.save(new Setting("shop_facebook", ad.getShopFacebook()));
+        settingRepository.save(new Setting("shop_instagram", ad.getShopInstagram()));
     }
 }

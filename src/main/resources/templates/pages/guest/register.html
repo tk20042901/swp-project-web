@@ -21,9 +21,6 @@
     <div class="w-100" style="max-width: 520px;">
         <!-- Alerts -->
         <div class="alerts-stack mb-3">
-            <div class="alert alert-warning py-2 px-3 mb-2" role="alert" th:if="${param.invalid_captcha}">
-                Captcha không hợp lệ
-            </div>
             <div class="alert alert-danger py-2 px-3 mb-0" role="alert" th:if="${error}" th:text="${error}">
             </div>
         </div>
@@ -60,11 +57,6 @@
                                autocomplete="new-password">
                     </div>
 
-                    <!-- reCAPTCHA -->
-                    <div class="mb-3">
-                        <div class="g-recaptcha" th:attr="data-sitekey=${siteKey}"></div>
-                    </div>
-
                     <button type="submit" class="btn btn-primary w-100">Đăng ký</button>
                 </form>
 
@@ -76,8 +68,7 @@
         </div>
     </div>
 </div>
-<div th:replace="~{fragments/footer :: footer}"></div>
-<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+<div></div>
 <script th:src="@{/js/bootstrap/bootstrap.bundle.min.js}"></script>
 </body>
 </html>

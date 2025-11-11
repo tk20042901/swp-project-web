@@ -1,6 +1,5 @@
 package com.swp.project.config;
 
-import com.swp.project.filter.CaptchaValidationFilter;
 import com.swp.project.filter.LoginRequestValidationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -20,7 +19,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private final CaptchaValidationFilter captchaValidationFilter;
     private final LoginRequestValidationFilter loginRequestValidationFilter;
 
     private static final String HOME_URL = "/";//nên thêm trang error
@@ -73,7 +71,6 @@ public class SecurityConfig {
                         .defaultSuccessUrl(HOME_URL, true)
                 )
                 .addFilterBefore(loginRequestValidationFilter, UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(captchaValidationFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(i -> i
                         .requestMatchers(ALL_ALLOWED).permitAll()
                         .requestMatchers(ADMIN_ALLOWED).hasAuthority("Admin")
@@ -86,7 +83,7 @@ public class SecurityConfig {
                 )
                 .exceptionHandling(i -> i
                         .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"))
-                        .accessDeniedPage(HOME_URL)
+                        .accessDeniedHandler((request, response, accessDeniedException) -> response.sendRedirect(HOME_URL))
                 );
 
         return http.build();

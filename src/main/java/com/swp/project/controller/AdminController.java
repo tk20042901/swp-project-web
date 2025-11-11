@@ -3,6 +3,7 @@ package com.swp.project.controller;
 import com.swp.project.dto.*;
 import com.swp.project.entity.user.Manager;
 import com.swp.project.service.AddressService;
+import com.swp.project.service.AiService;
 import com.swp.project.service.SettingService;
 import com.swp.project.service.order.OrderService;
 import com.swp.project.service.user.ManagerService;
@@ -11,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -31,10 +34,52 @@ public class AdminController {
     private final OrderService orderService;
     private final AddressService addressService;
     private final SettingService settingService;
+    private final AiService aiService;
 
     @GetMapping("")
-    public String showAdminMainPage(Model model) {
-        return "redirect:/admin/report";
+    public String showAdminMainPage(@RequestParam(defaultValue = "day") String timeSelected,
+                                    Model model) {
+        Long totalUnitSold = orderService.getUnitSold();
+        Long revenueToday = orderService.getRevenueToday();
+        Long revenueThisWeek = orderService.getRevenueThisWeek();
+        Long revenueThisMonth = orderService.getRevenueThisMonth();
+        double dailyPercentageChange = orderService.getDailyPercentageChange();
+        double weeklyPercentageChange = orderService.getWeeklyPercentageChange();
+        double monthlyPercentageChange = orderService.getMonthlyPercentageChange();
+        List<RevenueDto> daysReport = orderService.getDaysRevenue();
+        List<RevenueDto> monthsReport = orderService.getMonthsRevenue();
+        String label  = "Doanh thu hôm nay";
+        long amount   = revenueToday == null ? 0 : revenueToday;
+        double change = dailyPercentageChange;
+        switch(timeSelected) {
+            case "week":
+                label = "Doanh thu tuần này";
+                amount = revenueThisWeek == null ? 0 : revenueThisWeek;
+                change = weeklyPercentageChange;
+                break;
+            case "month":
+                label = "Doanh thu tháng này";
+                amount = revenueThisMonth == null ? 0 : revenueThisMonth;
+                change = monthlyPercentageChange;
+                break;
+            case "day":
+            default:
+
+                break;
+        }
+        model.addAttribute("timeSelected", timeSelected);
+        model.addAttribute("label", label);
+        model.addAttribute("amount", amount);
+        model.addAttribute("change", change);
+        model.addAttribute("daysReport", daysReport);
+        model.addAttribute("monthsReport", monthsReport);
+        model.addAttribute("totalOrder",orderService.getTotalOrders());
+        model.addAttribute("deliverOrder",orderService.getTotalDeliveredOrders());
+        model.addAttribute("processingOrder",orderService.getTotalProcessingOrders());
+        model.addAttribute("pendingOrder",orderService.getTotalPendingOrders());
+        model.addAttribute("shippingOrder",orderService.getTotalShippingOrders());
+        model.addAttribute("totalCanceledOrder", orderService.getTotalCancelledOrders());
+        return "pages/admin/index";
     }
 
     @GetMapping("/create-manager")
@@ -103,70 +148,9 @@ public class AdminController {
         return "redirect:/admin/manage-manager";
     }
 
-    @GetMapping("/statistic-report")
-    public String getAdminStatisticReport(Model model) {
-        Long totalUnitSold = orderService.getUnitSold();
-        Long revenueToday = orderService.getRevenueToday();
-        Long revenueThisWeek = orderService.getRevenueThisWeek();
-        Long revenueThisMonth = orderService.getRevenueThisMonth();
-        double dailyPercentageChange = orderService.getDailyPercentageChange();
-        double weeklyPercentageChange = orderService.getWeeklyPercentageChange();
-        double monthlyPercentageChange = orderService.getMonthlyPercentageChange();
-        model.addAttribute("totalUnitSold", totalUnitSold == null ? 0 : totalUnitSold);
-        model.addAttribute("revenueToday", revenueToday == null ? 0 : revenueToday);
-        model.addAttribute("revenueThisWeek", revenueThisWeek == null ? 0 : revenueThisWeek);
-        model.addAttribute("revenueThisMonth", revenueThisMonth == null ? 0 : revenueThisMonth);
-        model.addAttribute("dailyPercentageChange", dailyPercentageChange);
-        model.addAttribute("weeklyPercentageChange", weeklyPercentageChange);
-        model.addAttribute("monthlyPercentageChange", monthlyPercentageChange);
-        return "pages/admin/statistic-report";
-    }
 
-    @GetMapping("/report")
-    public String getAdminReport(@RequestParam(defaultValue = "day") String timeSelected,
-                                   Model model) {
-        Long totalUnitSold = orderService.getUnitSold();
-        Long revenueToday = orderService.getRevenueToday();
-        Long revenueThisWeek = orderService.getRevenueThisWeek();
-        Long revenueThisMonth = orderService.getRevenueThisMonth();
-        double dailyPercentageChange = orderService.getDailyPercentageChange();
-        double weeklyPercentageChange = orderService.getWeeklyPercentageChange();
-        double monthlyPercentageChange = orderService.getMonthlyPercentageChange();
-        List<RevenueDto> daysReport = orderService.getDaysRevenue();
-        List<RevenueDto> monthsReport = orderService.getMonthsRevenue();
-        String label  = "Doanh thu hôm nay";
-        long amount   = revenueToday == null ? 0 : revenueToday;
-        double change = dailyPercentageChange;
-        switch(timeSelected) {
-            case "week":
-                label = "Doanh thu tuần này";
-                amount = revenueThisWeek == null ? 0 : revenueThisWeek;
-                change = weeklyPercentageChange;
-                break;
-            case "month":
-                label = "Doanh thu tháng này";
-                amount = revenueThisMonth == null ? 0 : revenueThisMonth;
-                change = monthlyPercentageChange;
-                break;
-            case "day":
-            default:
 
-                break;
-        }
-        model.addAttribute("timeSelected", timeSelected);
-        model.addAttribute("label", label);
-        model.addAttribute("amount", amount);
-        model.addAttribute("change", change);
-        model.addAttribute("daysReport", daysReport);
-        model.addAttribute("monthsReport", monthsReport);
-        model.addAttribute("totalOrder",orderService.getTotalOrders());
-        model.addAttribute("deliverOrder",orderService.getTotalDeliveredOrders());
-        model.addAttribute("processingOrder",orderService.getTotalProcessingOrders());
-        model.addAttribute("pendingOrder",orderService.getTotalPendingOrders());
-        model.addAttribute("shippingOrder",orderService.getTotalShippingOrders());
-        model.addAttribute("totalCanceledOrder", orderService.getTotalCancelledOrders());
-        return "pages/admin/index";
-    }
+
     @GetMapping("/provinces")
     @ResponseBody
     public List<ProvinceDto> getAllProvinceCities() {
@@ -193,14 +177,7 @@ public class AdminController {
                 .toList();
     }
 
-    @GetMapping("/detail-report")
-    public String getDetailReport(Model model) {
-        List<RevenueDto> daysReport = orderService.getDaysRevenue();
-        List<RevenueDto> monthsReport = orderService.getMonthsRevenue();
-        model.addAttribute("daysReport", daysReport);
-        model.addAttribute("monthsReport", monthsReport);
-        return "pages/manager/detail-report";
-    }
+
 
     @GetMapping("/days/export-excel")
     public ResponseEntity<InputStreamResource> exportDaysRevenueToExcel() throws IOException {
@@ -237,6 +214,8 @@ public class AdminController {
         model.addAttribute("shopPhone", settingService.getShopPhone());
         model.addAttribute("shopEmail", settingService.getShopEmail());
         model.addAttribute("shopSlogan", settingService.getShopSlogan());
+        model.addAttribute("shopFacebook", settingService.getShopFacebook());
+        model.addAttribute("shopInstagram", settingService.getShopInstagram());
         return "pages/admin/setting";
     }
 
@@ -252,4 +231,13 @@ public class AdminController {
         redirectAttributes.addFlashAttribute("success", "Cập nhật cài đặt thành công.");
         return "redirect:/admin/setting";
     }
+
+
+    @PostMapping("/synchronize-vector-database")
+    public String synchronizeVectorDatabase(RedirectAttributes redirectAttributes) {
+        CompletableFuture.runAsync(aiService::synchronizeVectorStoreWithAllProductInDatabase);
+        redirectAttributes.addFlashAttribute("msg", "Yêu cầu đồng bộ cơ sở dữ liệu AI với thông tin sản phẩm trong hệ thống đang được thực thi, có thể mất vài phút để hoàn thành");
+        return "redirect:/admin";
+    }
+
 }

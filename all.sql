@@ -4511,5 +4511,8 @@ insert into setting("key", "value") values
 ('shop_name', 'Fruit Shop'),
 ('shop_address', 'Hoàng Giang, xã Nông Cống, tỉnh Thanh Hóa'),
 ('shop_phone', '0667710508'),
-('shop_email', 'quetoi@shop.com')
 
+('shop_email', 'quetoi@shop.com'),
+('shop_slogan', 'Tươi ngon mỗi ngày'),
+('shop_facebook', 'https://facebook.com/fruitshop.vn'),
+('shop_instagram', 'https://instagram.com/fruitshop.vn');

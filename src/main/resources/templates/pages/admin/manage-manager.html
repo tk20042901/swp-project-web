@@ -9,15 +9,19 @@
     <link rel="stylesheet" href="/css/style.css">
     <style>
         body {
-            background: linear-gradient(135deg, #f8f9fa, #e3f2fd);
+            background: #f8f9fa;
             min-height: 100vh;
+        }
+
+        .layout {
             display: flex;
-            flex-direction: column;
+            min-height: 100vh;
         }
 
         .main-content {
             flex: 1;
-            padding: 2rem 0;
+            margin-left: 260px;
+            padding: 2rem;
         }
 
         .page-header {
@@ -88,6 +92,11 @@
         }
 
         @media (max-width: 768px) {
+            .main-content {
+                margin-left: 70px;
+                padding: 1rem;
+            }
+
             .table {
                 font-size: 0.875rem;
             }
@@ -99,58 +108,61 @@
     </style>
 </head>
 <body>
-<div class="main-content">
-    <div class="container-fluid px-4">
-        <!-- Page Header -->
-        <div class="page-header">
-            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
-                <div>
-                    <h1 class="h4 mb-1 brand">
-                        <i class="bi bi-person-gear text-primary me-2"></i>
-                        Quản lý Manager
-                    </h1>
-                    <p class="text-muted mb-0">Quản lý thông tin và trạng thái manager trong hệ thống</p>
+<div class="layout">
+    <div th:replace="~{fragments/admin-sidebar :: admin-sidebar}"></div>
+
+    <div class="main-content">
+        <div class="container-fluid px-4">
+            <!-- Page Header -->
+            <div class="page-header">
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                    <div>
+                        <h1 class="h4 mb-1 brand">
+                            <i class="bi bi-person-gear text-primary me-2"></i>
+                            Quản lý Manager
+                        </h1>
+                        <p class="text-muted mb-0">Quản lý thông tin và trạng thái manager trong hệ thống</p>
+                    </div>
+                    <div class="d-flex gap-2 flex-wrap">
+                        <a href="/admin" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left me-1"></i>
+                            Quay lại
+                        </a>
+                        <a th:href="@{/admin/create-manager}" class="btn btn-primary">
+                            <i class="bi bi-plus-circle me-1"></i>
+                            Tạo Manager mới
+                        </a>
+                    </div>
                 </div>
-                <div class="d-flex gap-2 flex-wrap">
-                    <a href="/admin" class="btn btn-outline-secondary">
-                        <i class="bi bi-arrow-left me-1"></i>
-                        Quay lại
-                    </a>
-                    <a th:href="@{/admin/create-manager}" class="btn btn-primary">
-                        <i class="bi bi-plus-circle me-1"></i>
-                        Tạo Manager mới
-                    </a>
+            </div>
+
+            <!-- Alerts -->
+            <div th:if="${success != null or failed != null}" class="mb-3">
+                <div class="alert alert-success alert-dismissible fade show" th:if="${success != null}">
+                    <i class="bi bi-check-circle-fill me-2"></i>
+                    <strong>Thành công!</strong> <span th:text="${success}"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                <div class="alert alert-danger alert-dismissible fade show" th:if="${failed != null}">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    <strong>Thất bại!</strong> <span th:text="${failed}"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
             </div>
-        </div>
 
-        <!-- Alerts -->
-        <div th:if="${success != null or failed != null}" class="mb-3">
-            <div class="alert alert-success alert-dismissible fade show" th:if="${success != null}">
-                <i class="bi bi-check-circle-fill me-2"></i>
-                <strong>Thành công!</strong> <span th:text="${success}"></span>
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-            <div class="alert alert-danger alert-dismissible fade show" th:if="${failed != null}">
-                <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                <strong>Thất bại!</strong> <span th:text="${failed}"></span>
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        </div>
+            <!-- Data Table -->
+            <div class="data-table-card">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="mb-0">
+                        <i class="bi bi-list-ul me-2 text-primary"></i>
+                        Danh sách Manager
+                    </h5>
+                    <span class="badge bg-primary" th:text="'Tổng: ' + ${managers.size()}">Tổng: 0</span>
+                </div>
 
-        <!-- Data Table -->
-        <div class="data-table-card">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="mb-0">
-                    <i class="bi bi-list-ul me-2 text-primary"></i>
-                    Danh sách Manager
-                </h5>
-                <span class="badge bg-primary" th:text="'Tổng: ' + ${managers.size()}">Tổng: 0</span>
-            </div>
-
-            <div class="table-responsive">
-                <table class="table table-hover align-middle">
-                    <thead>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead>
                         <tr>
                             <th style="width: 80px;">
                                 <i class="bi bi-hash me-1"></i>ID
@@ -165,8 +177,8 @@
                                 <i class="bi bi-gear me-1"></i>Hành động
                             </th>
                         </tr>
-                    </thead>
-                    <tbody>
+                        </thead>
+                        <tbody>
                         <tr th:each="manager : ${managers}">
                             <td>
                                 <span class="fw-semibold text-muted" th:text="${manager.id}"></span>
@@ -178,10 +190,10 @@
                                 </div>
                             </td>
                             <td class="text-center">
-                                <span th:class="'status-badge ' + (${manager.enabled} ? 'status-active' : 'status-inactive')">
-                                    <i th:class="'bi ' + (${manager.enabled} ? 'bi-check-circle' : 'bi-x-circle') + ' me-1'"></i>
-                                    <span th:text="${manager.enabled} ? 'Đang mở khóa' : 'Đã khóa'"></span>
-                                </span>
+                                    <span th:class="'status-badge ' + (${manager.enabled} ? 'status-active' : 'status-inactive')">
+                                        <i th:class="'bi ' + (${manager.enabled} ? 'bi-check-circle' : 'bi-x-circle') + ' me-1'"></i>
+                                        <span th:text="${manager.enabled} ? 'Đang mở khóa' : 'Đã khóa'"></span>
+                                    </span>
                             </td>
                             <td class="text-center" style="width: 150px;">
                                 <form th:action="@{/admin/edit-manager/{id}(id=${manager.id})}" method="get" style="display:inline;">
@@ -198,8 +210,9 @@
                                 <p class="mt-2 mb-0">Không có manager nào trong hệ thống</p>
                             </td>
                         </tr>
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

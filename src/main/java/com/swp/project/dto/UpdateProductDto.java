@@ -42,22 +42,17 @@ public class UpdateProductDto{
     @Size(max = 255, message = "Mô tả sản phẩm không được vượt quá 255 ký tự")
     private String description;
 
-    @NotNull(message = "Giá sản phẩm không được để trống")
     @Min(value = 0, message = "Giá sản phẩm phải lớn hơn hoặc bằng 0")
-    private Long price;
+    private long price;
 
     @NotNull(message = "Đơn vị sản phẩm không được để trống")
     private ProductUnit unit;
 
-    @NotNull(message = "Trạng thái sản phẩm không được để trống")
-    private Boolean enabled;
+    private boolean enabled;
 
     @NotNull(message = "Danh mục sản phẩm không được để trống")
     private List<Long> categories;
-
-    @NotNull(message = "Số lượng sản phẩm không được để trống")
-    private Double quantity;
-
+    private double quantity;
     private String subDisplay1;
     private String subDisplay2;
     private String subDisplay3;

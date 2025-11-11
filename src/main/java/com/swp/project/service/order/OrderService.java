@@ -272,9 +272,9 @@ public class OrderService {
                 new RuntimeException("Không tìm thấy đơn hàng với ID: " + orderId));
     }
 
-    public Long calculateTotalAmount(Order order) {
-        return order.getTotalAmount();
-    }
+    // public Long calculateTotalAmount(Order order) {
+    //     return order.getTotalAmount();
+    // }
 
     public long getTotalOrders(){
         return orderRepository.count();

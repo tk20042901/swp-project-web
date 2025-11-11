@@ -48,8 +48,18 @@ public class SellerController {
     private final SellerService sellerService;
 
     @GetMapping("")
-    public String index() {
-         return "forward:/seller/statistic-report";
+    public String index(Model model) {
+        List<Order> orders = sellerService.get5NearOrder();
+        model.addAttribute("totalOrder",orderService.getTotalOrders());
+        model.addAttribute("deliverOrder",orderService.getTotalDeliveredOrders());
+        model.addAttribute("processingOrder",orderService.getTotalProcessingOrders());
+        model.addAttribute("pendingOrder",orderService.getTotalPendingOrders());
+        model.addAttribute("shippingOrder",orderService.getTotalShippingOrders());
+        model.addAttribute("totalCanceledOrder", orderService.getTotalCancelledOrders());
+        model.addAttribute("nearlySoldOutProducts", orderService.getNearlySoldOutProduct());
+        model.addAttribute("top5ProductRevenue",sellerService.getTop5ProductRevenue());
+        model.addAttribute("recentOrders",orders);
+        return "pages/seller/index";
     }
 
     @GetMapping("/all-orders")
@@ -159,27 +169,21 @@ public class SellerController {
         return "pages/seller/product/product-detail";
     }
 
-    @GetMapping("/statistic-report/overview")
-    public String getOverviewReport(Model model) {
-        model.addAttribute("unitSold", orderService.getUnitSold());
-        model.addAttribute("totalCanceledOrder", orderService.getTotalCancelledOrders());
-        model.addAttribute("nearlySoldOutProducts", orderService.getNearlySoldOutProduct());
-        return "pages/seller/statistic-report/overview";
-    }
-    @GetMapping("/statistic-report")
-    public String getSellerReport(Model model) {
-        List<Order> orders = sellerService.get5NearOrder();
-        model.addAttribute("totalOrder",orderService.getTotalOrders());
-        model.addAttribute("deliverOrder",orderService.getTotalDeliveredOrders());
-        model.addAttribute("processingOrder",orderService.getTotalProcessingOrders());
-        model.addAttribute("pendingOrder",orderService.getTotalPendingOrders());
-        model.addAttribute("shippingOrder",orderService.getTotalShippingOrders());
-        model.addAttribute("totalCanceledOrder", orderService.getTotalCancelledOrders());
-        model.addAttribute("nearlySoldOutProducts", orderService.getNearlySoldOutProduct());
-        model.addAttribute("top5ProductRevenue",sellerService.getTop5ProductRevenue());
-        model.addAttribute("recentOrders",orders);
-        return "pages/seller/index";
-    }
+//    @GetMapping("/statistic-report")
+//    public String getSellerReport(Model model) {
+//        List<Order> orders = sellerService.get5NearOrder();
+//        model.addAttribute("totalOrder",orderService.getTotalOrders());
+//        model.addAttribute("deliverOrder",orderService.getTotalDeliveredOrders());
+//        model.addAttribute("processingOrder",orderService.getTotalProcessingOrders());
+//        model.addAttribute("pendingOrder",orderService.getTotalPendingOrders());
+//        model.addAttribute("shippingOrder",orderService.getTotalShippingOrders());
+//        model.addAttribute("totalCanceledOrder", orderService.getTotalCancelledOrders());
+//        model.addAttribute("nearlySoldOutProducts", orderService.getNearlySoldOutProduct());
+//        model.addAttribute("top5ProductRevenue",sellerService.getTop5ProductRevenue());
+//        model.addAttribute("recentOrders",orders);
+//        return "pages/seller/index";
+//    }
+
 
     @GetMapping("/product-report")
     public String getProductRevenueReport(
@@ -198,9 +202,8 @@ public class SellerController {
             @PathVariable Long id,
             Model model) {
         Product product = productService.getProductById(id);
-        model.addAttribute("units", unitService.getAllUnits());
-        model.addAttribute("categories", categoryService.getAllCategories());
-        model.addAttribute("products", productService.getAllProducts());
+        model.addAttribute("units", unitService.getAllActiveProductUnits());
+        model.addAttribute("categories", categoryService.getAllActiveCategories());
         model.addAttribute("updateProductDto", new UpdateProductDto(product));
         return "pages/seller/product/update-product";
     }
@@ -232,9 +235,9 @@ public class SellerController {
     @GetMapping("/seller-create-product")
     public String showCreateProductForm(Model model) {
         CreateProductDto newProduct = new CreateProductDto();
-        newProduct.setCategories(categoryService.getAllCategories());
+        newProduct.setCategories(categoryService.getAllActiveCategories());
         model.addAttribute("productDto", newProduct);
-        model.addAttribute("units", unitService.getAllUnits());
+        model.addAttribute("units", unitService.getAllActiveProductUnits());
         return "pages/seller/product/create-product";
     }
 
@@ -294,8 +297,7 @@ public class SellerController {
             return "redirect:/seller/create-product-unit";
         }
         try {
-            ProductUnit productUnit = new ProductUnit(productUnitDto);
-            sellerRequestService.saveAddRequest(productUnit, principal.getName());
+            productUnitService.createNewProductUnit(productUnitDto,principal);
             redirectAttributes.addFlashAttribute("success", "Yêu cầu tạo đơn vị sản phẩm đã được gửi đến quản lý");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
@@ -331,12 +333,7 @@ public class SellerController {
             return "redirect:/seller/edit-product-unit?id=" + updateProductUnitDto.getId();
         }
         try {
-            ProductUnit oldProductUnit = productUnitService.getProductUnitById(updateProductUnitDto.getId());
-            if (oldProductUnit == null) {
-                throw new Exception("Không tìm thấy đơn vị sản phẩm");
-            }
-            ProductUnit newProductUnit = new ProductUnit(updateProductUnitDto);
-            sellerRequestService.saveUpdateRequest(oldProductUnit, newProductUnit, principal.getName());
+            productUnitService.updateProductUnit(updateProductUnitDto,principal);
             redirectAttributes.addFlashAttribute("success", "Yêu cầu cập nhật đơn vị sản phẩm đã được gửi đến quản lý");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
@@ -374,6 +371,8 @@ public class SellerController {
     @GetMapping("/edit-product-category")
     public String showEditCategoryForm(@RequestParam Long id, Model model, RedirectAttributes redirectAttributes) {
         try {
+
+            
             Category category = categoryService.getCategoryById(id);
             if (category == null) {
                 redirectAttributes.addFlashAttribute("error", "Không tìm thấy danh mục");
@@ -401,12 +400,7 @@ public class SellerController {
             return "redirect:/seller/edit-product-category?id=" + updateCategoryDto.getId();
         }
         try {
-            Category oldCategory = categoryService.getCategoryById(updateCategoryDto.getId());
-            if (oldCategory == null) {
-                throw new Exception("Không tìm thấy danh mục");
-            }
-            Category newCategory = new Category(updateCategoryDto);
-            sellerRequestService.saveUpdateRequest(oldCategory, newCategory, principal.getName());
+            categoryService.updateCategory(updateCategoryDto,principal);
             redirectAttributes.addFlashAttribute("success", "Yêu cầu cập nhật danh mục đã được gửi đến quản lý");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());

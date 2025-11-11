@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.validator.constraints.URL;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -28,4 +29,12 @@ public class AdminSettingDto {
 
     @NotBlank
     private String shopSlogan;
+
+    @NotBlank
+    @URL
+    private String shopFacebook;
+
+    @NotBlank
+    @URL
+    private String shopInstagram;
 }

@@ -27,7 +27,6 @@ import com.swp.project.entity.product.SubImage;
 import com.swp.project.entity.seller_request.SellerRequest;
 import com.swp.project.entity.shopping_cart.ShoppingCartItem;
 import com.swp.project.listener.event.ProductRelatedUpdateEvent;
-import com.swp.project.repository.order.OrderItemRepository;
 import com.swp.project.repository.order.OrderRepository;
 import com.swp.project.repository.product.ProductRepository;
 import com.swp.project.repository.shopping_cart.ShoppingCartItemRepository;
@@ -44,7 +43,6 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final OrderStatusService orderStatusService;
     private final OrderRepository orderRepository;
-    private final OrderItemRepository orderItemRepository;
     private final ShoppingCartItemRepository shoppingCartItemRepository;
     private final ApplicationEventPublisher eventPublisher;
     private final ImageService imageService;
@@ -173,26 +171,6 @@ public class ProductService {
         } else {
             return productRepository.findViewProductDtoByCategoryIdAndEnabled(categoryId, true, pageable);
         }
-    }
-
-    public Map<String, Page<ViewProductDto>> getHomepageProductsBatch(Long categoryId, int size) {
-        Map<String, Page<ViewProductDto>> results = new HashMap<>();
-
-        // Get products by category
-        Page<ViewProductDto> productsByCategory = getViewProductsByCategoryWithPagingAndSorting(categoryId, 0, size,
-                "default");
-        results.put("productByCategory", productsByCategory);
-
-        // Get newest products
-        Page<ViewProductDto> newestProducts = getViewProductsByCategoryWithPagingAndSorting(0L, 0, size, "newest");
-        results.put("newestProducts", newestProducts);
-
-        // Get most sold products
-        Page<ViewProductDto> mostSoldProducts = getViewProductsByCategoryWithPagingAndSorting(0L, 0, size,
-                "best-seller");
-        results.put("mostSoldProducts", mostSoldProducts);
-
-        return results;
     }
 
     public List<Product> getRelatedProducts(Long id, int limit) {

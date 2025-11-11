@@ -334,8 +334,8 @@
                             </td>
                             <td th:text="${item.product.name}"></td>
                             <td th:text="${item.quantity}"></td>
-                            <td th:text="${#numbers.formatDecimal(item.product.price, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></td>
-                            <td th:text="${#numbers.formatDecimal(item.quantity * item.product.price, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></td>
+                            <td th:text="${#numbers.formatDecimal(item.price, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></td>
+                            <td th:text="${#numbers.formatDecimal(item.quantity * item.price, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></td>
                         </tr>
                         </tbody>
                     </table>

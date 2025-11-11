@@ -230,7 +230,7 @@
               <span class="fw-semibold" th:text="${item.product.id}">123</span>
             </div>
             <div class="small text-muted mb-1">
-              <span th:text="${#numbers.formatInteger(item.product.price, 0, 'POINT')} + ' đ/' + ${item.product.unit.name}">50.000 đ/kg</span>
+              <span th:text="${#numbers.formatInteger(item.price, 0, 'POINT')} + ' đ/' + ${item.product.unit.name}">50.000 đ/kg</span>
             </div>
             <div class="small">
               <span class="text-muted">Số lượng:</span>
@@ -238,7 +238,7 @@
             </div>
           </div>
           <div class="text-end">
-            <div class="fw-bold text-success" th:text="${#numbers.formatInteger(item.product.price * item.quantity, 0, 'POINT')} + ' đ'">100.000 đ</div>
+            <div class="fw-bold text-success" th:text="${#numbers.formatInteger(item.price * item.quantity, 0, 'POINT')} + ' đ'">100.000 đ</div>
           </div>
         </div>
 

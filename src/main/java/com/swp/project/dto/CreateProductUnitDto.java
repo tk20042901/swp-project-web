@@ -14,9 +14,8 @@ public class CreateProductUnitDto {
     @Length(max = 20, message = "Tên đơn vị không được vượt quá 20 ký tự")
     private String name;
 
-    @NotNull(message = "Trường cho phép thập phân không được để trống")
-    private Boolean isAllowDecimal;
+    private boolean allowDecimal;
 
     @NotNull(message = "Trường trạng thái không được để trống")
-    private Boolean isActive;
+    private boolean active;
 }

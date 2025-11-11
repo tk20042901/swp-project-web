@@ -247,7 +247,7 @@ public class ShipperController {
 
             Long totalAmount = 0L;
             if (paymentMethodService.isCodMethod(order.getPaymentMethod())) {
-                totalAmount = orderService.calculateTotalAmount(order); // Chỉ tính tổng nếu phương thức thanh toán là COD
+                totalAmount = order.getTotalAmount(); // Chỉ tính tổng nếu phương thức thanh toán là COD
             }
             model.addAttribute("orderStatusService", shipperService.getOrderStatusService());
             model.addAttribute("shippingStatusService", shippingStatusService);

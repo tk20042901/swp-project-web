@@ -168,9 +168,9 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             COALESCE(SUM(
                 CASE 
                     WHEN o.payment_method_id = 'COD' AND os.name = 'Đã Giao Hàng' 
-                        THEN oi.quantity * p.price
+                        THEN oi.quantity * oi.price
                     WHEN o.payment_method_id = 'QR' AND os.name IN ('Đã Giao Hàng', 'Đang Giao Hàng', 'Đang Chuẩn Bị Hàng') 
-                        THEN oi.quantity * p.price
+                        THEN oi.quantity * oi.price
                     ELSE 0
                 END
             ), 0) AS revenue
@@ -193,8 +193,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
       WHEN o.payment_method_id = 'QR' AND os.name IN ('Đã Giao Hàng','Đang Giao Hàng','Đang Chuẩn Bị Hàng') THEN oi.quantity
       ELSE 0 END),0) AS totalSold,
     COALESCE(SUM(CASE
-      WHEN o.payment_method_id = 'COD' AND os.name = 'Đã Giao Hàng' THEN oi.quantity * p.price
-      WHEN o.payment_method_id = 'QR' AND os.name IN ('Đã Giao Hàng','Đang Giao Hàng','Đang Chuẩn Bị Hàng') THEN oi.quantity * p.price
+      WHEN o.payment_method_id = 'COD' AND os.name = 'Đã Giao Hàng' THEN oi.quantity * oi.price
+      WHEN o.payment_method_id = 'QR' AND os.name IN ('Đã Giao Hàng','Đang Giao Hàng','Đang Chuẩn Bị Hàng') THEN oi.quantity * oi.price
       ELSE 0 END),0) AS revenue
   FROM product p
   LEFT JOIN order_item oi ON oi.product_id = p.id
@@ -227,9 +227,9 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             COALESCE(SUM(
                 CASE 
                     WHEN o.payment_method_id = 'COD' AND os.name = 'Đã Giao Hàng' 
-                        THEN oi.quantity * p.price
+                        THEN oi.quantity * oi.price
                     WHEN o.payment_method_id = 'QR' AND os.name IN ('Đã Giao Hàng', 'Đang Giao Hàng', 'Đang Chuẩn Bị Hàng') 
-                        THEN oi.quantity * p.price
+                        THEN oi.quantity * oi.price
                     ELSE 0
                 END
             ), 0) AS revenue

@@ -36,7 +36,7 @@ public class BillService {
                 case "paymentTime":
                     return o1.getPaymentTime().compareTo(o2.getPaymentTime());
                 case "totalAmount":
-                    return orderService.calculateTotalAmount(o1.getOrder()).compareTo(orderService.calculateTotalAmount(o2.getOrder()));
+                    return o1.getOrder().getTotalAmount().compareTo(o2.getOrder().getTotalAmount());
                 case "address":
                     return o1.getOrder().getAddressString().compareTo(o2.getOrder().getAddressString());
                 default:
@@ -77,7 +77,7 @@ public class BillService {
             try {
                 long min = Long.parseLong(minAmount);
                 bills = bills.stream()
-                        .filter(bill -> orderService.calculateTotalAmount(bill.getOrder()) >= min)
+                        .filter(bill -> bill.getOrder().getTotalAmount() >= min)
                         .toList();
             } catch (NumberFormatException ignored) {}
         }
@@ -85,7 +85,7 @@ public class BillService {
             try {
                 long max = Long.parseLong(maxAmount);
                 bills = bills.stream()
-                        .filter(bill -> orderService.calculateTotalAmount(bill.getOrder()) <= max)
+                        .filter(bill -> bill.getOrder().getTotalAmount() <= max)
                         .toList();
             } catch (NumberFormatException ignored) {}
         }
@@ -107,7 +107,7 @@ public class BillService {
                 case "paymentTime":
                     return k * o1.getPaymentTime().compareTo(o2.getPaymentTime());
                 case "totalAmount":
-                    return k * orderService.calculateTotalAmount(o1.getOrder()).compareTo(orderService.calculateTotalAmount(o2.getOrder()));
+                    return k * o1.getOrder().getTotalAmount().compareTo(o2.getOrder().getTotalAmount());
                 case "address":
                     return k * o1.getOrder().getAddressString().compareTo(o2.getOrder().getAddressString());
                 default:

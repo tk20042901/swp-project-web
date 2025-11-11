@@ -1,5 +1,43 @@
-<div th:fragment="footer" class="bg-dark-subtle text-center">
-    <div class="py-3">
-        <span>© 2025 FruitShop. All rights reserved.</span>
+<div th:fragment="footer" class="footer text-dark" style="background-color: rgb(234, 234, 234);">
+    <div class="container" style="padding-top: 20px">
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <h5 class="text-uppercase mb-3">FruitShop</h5>
+                <p th:text="${shopSlogan}"></p>
+            </div>
+            <div class="col-md-4 mb-3">
+                <h6 class="text-uppercase mb-3">Liên hệ</h6>
+                <p class="mb-2">
+                    <i class="bi bi-telephone-fill me-2"></i>
+                    <span>Số điện thoại: </span>
+                    <span th:text="${shopPhone}"></span>
+                </p>
+                <p class="mb-2">
+                    <i class="bi bi-envelope-fill me-2"></i>
+                    <span>Email: </span>
+                    <span th:text="${shopEmail}"></span>
+                </p>
+                <p class="mb-0">
+                    <i class="bi bi-geo-alt-fill me-2"></i>
+                    <span>Địa chỉ: </span>
+                    <span th:text="${shopAddress}"></span>
+                </p>
+            </div>
+            <div class="col-md-4 mb-3">
+                <h6 class="text-uppercase mb-3">Theo dõi chúng tôi</h6>
+                <div class="social-links">
+                    <p class="mb-2">
+                        <i class="bi bi-facebook me-2"></i>
+                        <span>Facebook: </span>
+                        <span th:text="${shopFacebook}"></span>
+                    </p>
+                    <p class="mb-2">
+                        <i class="bi bi-instagram me-2"></i>
+                        <span>Instagram: </span>
+                        <span th:text="${shopInstagram}"></span>
+                    </p>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

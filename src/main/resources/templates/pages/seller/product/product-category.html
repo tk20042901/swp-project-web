@@ -402,6 +402,7 @@
                     <tr>
                         <th>ID</th>
                         <th>Tên danh mục</th>
+                        <th>Hiện danh mục(Thêm hoặc cập nhật sản phẩm)</th>
                         <th>Thao tác</th>
                     </tr>
                     </thead>
@@ -415,6 +416,7 @@
                     <tr th:each="category : ${categories}">
                         <td th:text="${category.id}"></td>
                         <td th:text="${category.name}"></td>
+                        <td th:text="${category.active ? 'Có' : 'Không'}"></td>
                         <td>
                             <a th:href="@{/seller/edit-product-category(id=${category.id})}">
                                 <i class="bi bi-pencil"></i> Sửa
