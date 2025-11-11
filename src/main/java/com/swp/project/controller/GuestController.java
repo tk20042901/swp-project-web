@@ -47,20 +47,20 @@ public class GuestController {
 
     @GetMapping("/login")
     public String showLoginForm(Model model) {
-        return "/pages/guest/login";
+        return "pages/guest/login";
     }
 
     @GetMapping("/register")
     public String showRegisterForm(Model model) {
         model.addAttribute("registerDto", new RegisterDto());
-        return "/pages/guest/register";
+        return "pages/guest/register";
     }
 
     @PostMapping("/register")
     public String processRegister(@Valid @ModelAttribute RegisterDto registerDto, BindingResult bindingResult,
             RedirectAttributes redirectAttributes, Model model) {
         if (bindingResult.hasErrors()) {
-            return "/pages/guest/register";
+            return "pages/guest/register";
         }
         try {
             customerService.register(registerDto);
