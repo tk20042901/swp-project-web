@@ -36,3 +36,4 @@ build/
 
 .github/java-upgrade/**
 *.sh
+*.sh.save
