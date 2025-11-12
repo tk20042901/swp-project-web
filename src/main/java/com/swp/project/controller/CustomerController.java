@@ -229,7 +229,6 @@ public class CustomerController {
                                  RedirectAttributes redirectAttributes,
                                  Principal principal) {
 
-        // Kiểm tra đầu vào
         if (quantityStr == null || quantityStr.isBlank()) {
             redirectAttributes.addFlashAttribute("error", "Vui lòng nhập số lượng hợp lệ.");
             return "redirect:/customer/shopping-cart";

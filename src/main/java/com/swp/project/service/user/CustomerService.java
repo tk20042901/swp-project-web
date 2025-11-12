@@ -206,29 +206,17 @@ public class CustomerService {
     }
     @Transactional
     public void removeItem(String email, Long productId) {
-        try{
             shoppingCartItemRepository.deleteByCustomerEmailAndProductId(email, productId);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
     }
 
     public void updateCartQuantity(String email, Long productId, double quantity) {
         Customer customer = customerRepository.getByEmail(email);
-        if (customer == null) {
-            throw new RuntimeException("Customer not found with email: " + email);
-        }
 
         ShoppingCartItemId id = new ShoppingCartItemId();
         id.setCustomerId(customer.getId());
         id.setProductId(productId);
 
         ShoppingCartItem item = shoppingCartItemRepository.findShoppingCartItemById(id);
-        if (item == null) {
-            throw new RuntimeException("Shopping cart item not found for customer: "
-                    + customer.getId() + ", product: " + productId);
-        }
-
         item.setQuantity(quantity);
         shoppingCartItemRepository.save(item);
     }
