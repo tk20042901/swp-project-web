@@ -29,12 +29,8 @@ public class ImageService {
         byte[] bytes = file.getBytes();
         String base64 = Base64.getEncoder().encodeToString(bytes);
 
-        String contentType = file.getContentType();
-        if (contentType == null) {
-            contentType = "image/jpeg"; // default
-        }
 
-        return String.format("data:%s;base64,%s", contentType, base64);
+        return String.format("data:%s;base64,%s", "image/webp", base64);
     }
 
     public String base64ToFileNIO(String base64String, String outputPath) throws IOException {
@@ -65,13 +61,13 @@ public class ImageService {
 
         // Ghi ảnh nén vào bộ nhớ tạm
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        ImageIO.write(resizedImage, "jpg", outputStream);
+        ImageIO.write(resizedImage, "webp", outputStream);
 
         // Chuyển sang Base64
         byte[] imageBytes = outputStream.toByteArray();
         String base64 = Base64.getEncoder().encodeToString(imageBytes);
 
-        return CompletableFuture.completedFuture("data:image/jpeg;base64," + base64);
+        return CompletableFuture.completedFuture("data:image/webp;base64," + base64);
     }
 
 }

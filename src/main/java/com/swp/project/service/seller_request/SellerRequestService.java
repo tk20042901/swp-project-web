@@ -72,7 +72,7 @@ public class SellerRequestService {
         }
     }
 
-    public <T> void saveUpdateRequest(T oldEntity, T entity, String sellerEmail) throws JsonProcessingException {
+    public <T> void  saveUpdateRequest(T oldEntity, T entity, String sellerEmail) throws JsonProcessingException {
         sellerRequestRepository.save(SellerRequest.builder()
                 .entityName(entity.getClass().getSimpleName())
                 .oldContent(objectMapper.writeValueAsString(oldEntity))

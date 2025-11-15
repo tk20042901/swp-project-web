@@ -46,6 +46,7 @@ public class SellerController {
     private final SellerRequestService sellerRequestService;
     private final ProductUnitService productUnitService;
     private final SellerService sellerService;
+    private final SellerRequestService sellerRequesService;
 
     @GetMapping("")
     public String index(Model model) {
@@ -360,6 +361,12 @@ public class SellerController {
         }
         try {
             Category category = new Category(categoryDto);
+            if(categoryService.nameAlreadyExistsForCreate(category.getName())){
+                throw new Exception("Danh mục đã tồn tại");
+            }
+            if(categoryService.nameAlreadyExistsInSellerRequest(category.getName())){
+                throw new Exception("Danh mục đã tồn tại trong yêu cầu của người bán");
+            }
             sellerRequestService.saveAddRequest(category, principal.getName());
             redirectAttributes.addFlashAttribute("success", "Yêu cầu tạo danh mục đã được gửi đến quản lý");
         } catch (Exception e) {
@@ -378,6 +385,7 @@ public class SellerController {
                 redirectAttributes.addFlashAttribute("error", "Không tìm thấy danh mục");
                 return "redirect:/seller/product-category";
             }
+
             
             UpdateCategoryDto updateCategoryDto = new UpdateCategoryDto(category);
                     

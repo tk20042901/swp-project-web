@@ -21,6 +21,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         Customer customer = customerService.getCustomerByEmail(email);
         if(customer == null) {
             customer = customerService.registerWithGoogle(email);
+        } else if (!customer.isEnabled()){
+            throw new OAuth2AuthenticationException("account_disabled");
         }
         return customer;
     }

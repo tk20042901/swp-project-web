@@ -69,7 +69,7 @@ class ManagerServiceTest {
         validRegisterDto.setFullname("Test Manager");
         validRegisterDto.setBirthDate(LocalDate.of(1990, 1, 1));
         validRegisterDto.setCId("123456789");
-        validRegisterDto.setCommuneWardCode("WARD001");
+//        validRegisterDto.setCommuneWardCode("WARD001");
         validRegisterDto.setSpecificAddress("123 Test Street");
         
         // Setup mock province city
@@ -102,7 +102,7 @@ class ManagerServiceTest {
         validEditManagerDto.setFullname("Updated Manager");
         validEditManagerDto.setBirthDate(LocalDate.of(1990, 6, 20));
         validEditManagerDto.setCId("111222333");
-        validEditManagerDto.setCommuneWardCode("WARD001");
+//        validEditManagerDto.setCommuneWardCode("WARD001");
         validEditManagerDto.setSpecificAddress("789 New Street");
         validEditManagerDto.setStatus(true);
     }
@@ -112,8 +112,8 @@ class ManagerServiceTest {
     @Order(1)
     void createManager_Success_ValidData() {
         // Arrange
-        when(communeWardRepository.findById(validRegisterDto.getCommuneWardCode()))
-            .thenReturn(Optional.of(mockCommuneWard));
+//        when(communeWardRepository.findById(validRegisterDto.getCommuneWardCode()))
+//            .thenReturn(Optional.of(mockCommuneWard));
         when(userRepository.existsByEmail(validRegisterDto.getEmail())).thenReturn(false);
         when(sellerRepository.findByCid(validRegisterDto.getCId())).thenReturn(null);
         when(shipperRepository.findByCid(validRegisterDto.getCId())).thenReturn(null);
@@ -137,7 +137,7 @@ class ManagerServiceTest {
         assertEquals(validRegisterDto.getSpecificAddress(), savedManager.getSpecificAddress());
         
         verify(passwordEncoder).encode(validRegisterDto.getPassword());
-        verify(communeWardRepository).findById(validRegisterDto.getCommuneWardCode());
+//        verify(communeWardRepository).findById(validRegisterDto.getCommuneWardCode());
         verify(userRepository).existsByEmail(validRegisterDto.getEmail());
         verify(sellerRepository).findByCid(validRegisterDto.getCId());
         verify(shipperRepository).findByCid(validRegisterDto.getCId());
@@ -149,8 +149,8 @@ class ManagerServiceTest {
     @Order(2)
     void createManager_Fail_CommuneWardNotFound() {
         // Arrange
-        when(communeWardRepository.findById(validRegisterDto.getCommuneWardCode()))
-            .thenReturn(Optional.empty());
+//        when(communeWardRepository.findById(validRegisterDto.getCommuneWardCode()))
+//            .thenReturn(Optional.empty());
         
         // Act & Assert
         RuntimeException exception = assertThrows(RuntimeException.class, 
@@ -165,8 +165,8 @@ class ManagerServiceTest {
     @Order(4)
     void createManager_Fail_EmailAlreadyExists() {
         // Arrange
-        when(communeWardRepository.findById(validRegisterDto.getCommuneWardCode()))
-            .thenReturn(Optional.of(mockCommuneWard));
+//        when(communeWardRepository.findById(validRegisterDto.getCommuneWardCode()))
+//            .thenReturn(Optional.of(mockCommuneWard));
         when(userRepository.existsByEmail(validRegisterDto.getEmail())).thenReturn(true);
         
         // Act & Assert
@@ -188,8 +188,8 @@ class ManagerServiceTest {
             .email("other@test.com")
             .build();
         
-        when(communeWardRepository.findById(validRegisterDto.getCommuneWardCode()))
-            .thenReturn(Optional.of(mockCommuneWard));
+//        when(communeWardRepository.findById(validRegisterDto.getCommuneWardCode()))
+//            .thenReturn(Optional.of(mockCommuneWard));
         when(userRepository.existsByEmail(validRegisterDto.getEmail())).thenReturn(false);
         when(sellerRepository.findByCid(validRegisterDto.getCId())).thenReturn(null);
         when(shipperRepository.findByCid(validRegisterDto.getCId())).thenReturn(null);
@@ -212,8 +212,8 @@ class ManagerServiceTest {
     void updateManager_Success_ValidData() {
         // Arrange
         when(managerRepository.findById(1L)).thenReturn(Optional.of(existingManager));
-        when(communeWardRepository.findById(validEditManagerDto.getCommuneWardCode()))
-            .thenReturn(Optional.of(mockCommuneWard));
+//        when(communeWardRepository.findById(validEditManagerDto.getCommuneWardCode()))
+//            .thenReturn(Optional.of(mockCommuneWard));
         when(userRepository.existsByEmail(validEditManagerDto.getEmail())).thenReturn(false);
         when(sellerRepository.findByCid(validEditManagerDto.getCId())).thenReturn(null);
         when(shipperRepository.findByCid(validEditManagerDto.getCId())).thenReturn(null);
@@ -235,7 +235,7 @@ class ManagerServiceTest {
         assertTrue(updatedManager.isEnabled());
         
         verify(managerRepository).findById(1L);
-        verify(communeWardRepository).findById(validEditManagerDto.getCommuneWardCode());
+//        verify(communeWardRepository).findById(validEditManagerDto.getCommuneWardCode());
         verify(userRepository).existsByEmail(validEditManagerDto.getEmail());
         verify(eventPublisher, never()).publishEvent(any(UserDisabledEvent.class));
     }
@@ -247,8 +247,8 @@ class ManagerServiceTest {
         // Arrange
         validEditManagerDto.setEmail(existingManager.getEmail());
         when(managerRepository.findById(1L)).thenReturn(Optional.of(existingManager));
-        when(communeWardRepository.findById(validEditManagerDto.getCommuneWardCode()))
-            .thenReturn(Optional.of(mockCommuneWard));
+//        when(communeWardRepository.findById(validEditManagerDto.getCommuneWardCode()))
+//            .thenReturn(Optional.of(mockCommuneWard));
         when(sellerRepository.findByCid(validEditManagerDto.getCId())).thenReturn(null);
         when(shipperRepository.findByCid(validEditManagerDto.getCId())).thenReturn(null);
         when(managerRepository.findByCid(validEditManagerDto.getCId())).thenReturn(null);
@@ -268,8 +268,8 @@ class ManagerServiceTest {
         // Arrange
         validEditManagerDto.setCId(existingManager.getCid());
         when(managerRepository.findById(1L)).thenReturn(Optional.of(existingManager));
-        when(communeWardRepository.findById(validEditManagerDto.getCommuneWardCode()))
-            .thenReturn(Optional.of(mockCommuneWard));
+//        when(communeWardRepository.findById(validEditManagerDto.getCommuneWardCode()))
+//            .thenReturn(Optional.of(mockCommuneWard));
         when(userRepository.existsByEmail(validEditManagerDto.getEmail())).thenReturn(false);
         
         // Act
@@ -289,8 +289,8 @@ class ManagerServiceTest {
         // Arrange
         validEditManagerDto.setStatus(false);
         when(managerRepository.findById(1L)).thenReturn(Optional.of(existingManager));
-        when(communeWardRepository.findById(validEditManagerDto.getCommuneWardCode()))
-            .thenReturn(Optional.of(mockCommuneWard));
+//        when(communeWardRepository.findById(validEditManagerDto.getCommuneWardCode()))
+//            .thenReturn(Optional.of(mockCommuneWard));
         when(userRepository.existsByEmail(validEditManagerDto.getEmail())).thenReturn(false);
         when(sellerRepository.findByCid(validEditManagerDto.getCId())).thenReturn(null);
         when(shipperRepository.findByCid(validEditManagerDto.getCId())).thenReturn(null);
@@ -334,8 +334,8 @@ class ManagerServiceTest {
     void updateManager_Fail_CommuneWardNotFound() {
         // Arrange
         when(managerRepository.findById(1L)).thenReturn(Optional.of(existingManager));
-        when(communeWardRepository.findById(validEditManagerDto.getCommuneWardCode()))
-            .thenReturn(Optional.empty());
+//        when(communeWardRepository.findById(validEditManagerDto.getCommuneWardCode()))
+//            .thenReturn(Optional.empty());
         
         // Act & Assert
         RuntimeException exception = assertThrows(RuntimeException.class, 
@@ -351,8 +351,8 @@ class ManagerServiceTest {
     void updateManager_Fail_EmailAlreadyExists() {
         // Arrange
         when(managerRepository.findById(1L)).thenReturn(Optional.of(existingManager));
-        when(communeWardRepository.findById(validEditManagerDto.getCommuneWardCode()))
-            .thenReturn(Optional.of(mockCommuneWard));
+//        when(communeWardRepository.findById(validEditManagerDto.getCommuneWardCode()))
+//            .thenReturn(Optional.of(mockCommuneWard));
         when(userRepository.existsByEmail(validEditManagerDto.getEmail())).thenReturn(true);
         
         // Act & Assert
@@ -370,8 +370,8 @@ class ManagerServiceTest {
         // Test case 1: CID đã được seller sử dụng
         Seller existingSeller = new Seller();
         when(managerRepository.findById(1L)).thenReturn(Optional.of(existingManager));
-        when(communeWardRepository.findById(validEditManagerDto.getCommuneWardCode()))
-            .thenReturn(Optional.of(mockCommuneWard));
+//        when(communeWardRepository.findById(validEditManagerDto.getCommuneWardCode()))
+//            .thenReturn(Optional.of(mockCommuneWard));
         when(userRepository.existsByEmail(validEditManagerDto.getEmail())).thenReturn(false);
         when(sellerRepository.findByCid(validEditManagerDto.getCId())).thenReturn(existingSeller);
         
@@ -385,8 +385,8 @@ class ManagerServiceTest {
         // Test case 2: CID đã được shipper sử dụng
         Shipper existingShipper = new Shipper();
         when(managerRepository.findById(1L)).thenReturn(Optional.of(existingManager));
-        when(communeWardRepository.findById(validEditManagerDto.getCommuneWardCode()))
-            .thenReturn(Optional.of(mockCommuneWard));
+//        when(communeWardRepository.findById(validEditManagerDto.getCommuneWardCode()))
+//            .thenReturn(Optional.of(mockCommuneWard));
         when(userRepository.existsByEmail(validEditManagerDto.getEmail())).thenReturn(false);
         when(sellerRepository.findByCid(validEditManagerDto.getCId())).thenReturn(null);
         when(shipperRepository.findByCid(validEditManagerDto.getCId())).thenReturn(existingShipper);
@@ -404,8 +404,8 @@ class ManagerServiceTest {
             .cid(validEditManagerDto.getCId())
             .build();
         when(managerRepository.findById(1L)).thenReturn(Optional.of(existingManager));
-        when(communeWardRepository.findById(validEditManagerDto.getCommuneWardCode()))
-            .thenReturn(Optional.of(mockCommuneWard));
+//        when(communeWardRepository.findById(validEditManagerDto.getCommuneWardCode()))
+//            .thenReturn(Optional.of(mockCommuneWard));
         when(userRepository.existsByEmail(validEditManagerDto.getEmail())).thenReturn(false);
         when(sellerRepository.findByCid(validEditManagerDto.getCId())).thenReturn(null);
         when(shipperRepository.findByCid(validEditManagerDto.getCId())).thenReturn(null);

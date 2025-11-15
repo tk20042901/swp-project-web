@@ -11,7 +11,7 @@
 </head>
 <body>
 <div class="layout">
-    <!-- Thêm sidebar -->
+    <!-- Sidebar -->
     <div th:replace="~{fragments/admin-sidebar :: admin-sidebar}"></div>
 
     <div class="main-content">
@@ -33,13 +33,14 @@
                     <span th:text="${failed}"></span>
                 </div>
 
-                <form th:action="@{/admin/edit-manager/{id}(id=${editManagerDto.id})}" th:object="${editManagerDto}" method="post">
-                    <input type="hidden" id="savedProvinceCode" th:value="*{provinceCityCode}" />
-                    <input type="hidden" id="savedWardCode" th:value="*{communeWardCode}" />
+                <form th:action="@{/admin/edit-manager/{id}(id=${editManagerDto.id})}"
+                      th:object="${editManagerDto}"
+                      method="post">
 
                     <!-- Account Information Section -->
                     <div>
                         <div class="row">
+                            <!-- Email -->
                             <div class="col-md-12 mb-3">
                                 <label for="email" class="form-label">
                                     Email<span class="required-mark">*</span>
@@ -48,8 +49,13 @@
                                        class="form-control"
                                        id="email"
                                        th:field="*{email}"
+                                       th:classappend="${#fields.hasErrors('email')} ? ' is-invalid' : ''"
                                        placeholder="Nhập địa chỉ email"
                                        required/>
+                                <div class="invalid-feedback"
+                                     th:if="${#fields.hasErrors('email')}"
+                                     th:errors="*{email}">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -57,6 +63,7 @@
                     <!-- Personal Information Section -->
                     <div>
                         <div class="row">
+                            <!-- Fullname -->
                             <div class="col-md-12 mb-3">
                                 <label for="fullname" class="form-label">
                                     Họ và tên<span class="required-mark">*</span>
@@ -65,10 +72,16 @@
                                        class="form-control"
                                        id="fullname"
                                        th:field="*{fullname}"
+                                       th:classappend="${#fields.hasErrors('fullname')} ? ' is-invalid' : ''"
                                        placeholder="Nhập họ và tên đầy đủ"
                                        required/>
+                                <div class="invalid-feedback"
+                                     th:if="${#fields.hasErrors('fullname')}"
+                                     th:errors="*{fullname}">
+                                </div>
                             </div>
 
+                            <!-- BirthDate -->
                             <div class="col-md-6 mb-3">
                                 <label for="birthDate" class="form-label">
                                     Ngày sinh<span class="required-mark">*</span>
@@ -77,9 +90,15 @@
                                        class="form-control"
                                        id="birthDate"
                                        th:field="*{birthDate}"
+                                       th:classappend="${#fields.hasErrors('birthDate')} ? ' is-invalid' : ''"
                                        required/>
+                                <div class="invalid-feedback"
+                                     th:if="${#fields.hasErrors('birthDate')}"
+                                     th:errors="*{birthDate}">
+                                </div>
                             </div>
 
+                            <!-- cId -->
                             <div class="col-md-6 mb-3">
                                 <label for="cId" class="form-label">
                                     CMND/CCCD<span class="required-mark">*</span>
@@ -88,8 +107,13 @@
                                        class="form-control"
                                        id="cId"
                                        th:field="*{cId}"
+                                       th:classappend="${#fields.hasErrors('cId')} ? ' is-invalid' : ''"
                                        placeholder="Nhập số CMND/CCCD"
                                        required/>
+                                <div class="invalid-feedback"
+                                     th:if="${#fields.hasErrors('cId')}"
+                                     th:errors="*{cId}">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -97,30 +121,7 @@
                     <!-- Address Information Section -->
                     <div>
                         <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="provinceCityCode" class="form-label">
-                                    Tỉnh/Thành phố<span class="required-mark">*</span>
-                                </label>
-                                <select class="form-select"
-                                        id="provinceCityCode"
-                                        th:field="*{provinceCityCode}"
-                                        required>
-                                    <option value="">Chọn Tỉnh/Thành phố</option>
-                                </select>
-                            </div>
-
-                            <div class="col-md-6 mb-3">
-                                <label for="communeWardCode" class="form-label">
-                                    Phường/Xã<span class="required-mark">*</span>
-                                </label>
-                                <select class="form-select"
-                                        id="communeWardCode"
-                                        th:field="*{communeWardCode}"
-                                        required>
-                                    <option value="">Chọn Phường/Xã</option>
-                                </select>
-                            </div>
-
+                            <!-- Specific Address -->
                             <div class="col-md-12 mb-3">
                                 <label for="specificAddress" class="form-label">
                                     Địa chỉ cụ thể<span class="required-mark">*</span>
@@ -129,8 +130,13 @@
                                        class="form-control"
                                        id="specificAddress"
                                        th:field="*{specificAddress}"
+                                       th:classappend="${#fields.hasErrors('specificAddress')} ? ' is-invalid' : ''"
                                        placeholder="Số nhà, tên đường..."
                                        required/>
+                                <div class="invalid-feedback"
+                                     th:if="${#fields.hasErrors('specificAddress')}"
+                                     th:errors="*{specificAddress}">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -140,13 +146,14 @@
                         <div class="form-check d-flex align-items-center">
                             <input type="checkbox"
                                    id="status"
-                                   th:field="*{status}"
-                                   value="true"/>
+                                   th:field="*{status}"/>
                             <label class="form-check-label" for="status">
                                 Đang mở khóa
                             </label>
                         </div>
                     </div>
+
+                    <!-- Password (optional) -->
                     <div class="col-md-6 mb-3">
                         <label for="password" class="form-label">
                             Mật khẩu
@@ -155,7 +162,12 @@
                                class="form-control"
                                id="password"
                                th:field="*{password}"
+                               th:classappend="${#fields.hasErrors('password')} ? ' is-invalid' : ''"
                                placeholder="Để trống là không cập nhật mật khẩu"/>
+                        <div class="invalid-feedback"
+                             th:if="${#fields.hasErrors('password')}"
+                             th:errors="*{password}">
+                        </div>
                     </div>
 
                     <!-- Submit Button -->

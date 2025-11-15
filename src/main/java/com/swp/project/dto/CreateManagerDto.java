@@ -13,6 +13,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Getter
 @Setter
@@ -33,6 +34,7 @@ public class CreateManagerDto {
     @Pattern(regexp = "^([\\p{L}\\p{N}.\\- ])+$", message = "Tên không hợp lệ")
     private String fullname;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @NotNull(message = "Ngày sinh không được để trống")
     @Past(message = "Ngày sinh phải là ngày trong quá khứ")
     private LocalDate birthDate;
@@ -40,12 +42,6 @@ public class CreateManagerDto {
     @NotBlank(message = "CMND/CCCD không được để trống")
     @Size(max = 50, message = "CMND/CCCD không được vượt quá 50 ký tự")
     private String cId;
-
-    @NotBlank(message = "Tỉnh / Thành phố không được để trống")
-    private String provinceCityCode;
-
-    @NotBlank(message = "Quận / Huyện không được để trống")
-    private String communeWardCode;
 
     @NotBlank(message = "Địa chỉ cụ thể không được để trống")
     @Size(max = 100, message = "Địa chỉ chi tiết không được vượt quá 100 ký tự")

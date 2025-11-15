@@ -16,6 +16,7 @@ import java.util.List;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
@@ -33,12 +34,11 @@ public class ManagerService {
         return managerRepository.findById(id).orElse(null);
     }
 
+    @Transactional
     public void updateManager(Long id, EditManagerDto updatedManager) {
         Manager existingManager = managerRepository.findById(id).orElseThrow(
             () -> new IllegalArgumentException("Không tìm thấy quản lý")
         );
-        CommuneWard ward = communeWardRepository.findById(updatedManager.getCommuneWardCode())
-            .orElseThrow(() -> new RuntimeException("Không tìm thấy xã"));
         boolean isEnabled = Boolean.TRUE.equals(updatedManager.getStatus());
         if (!existingManager.getEmail().equals(updatedManager.getEmail()) && userRepository.existsByEmail(updatedManager.getEmail())) {
             throw new IllegalArgumentException("Mail đã được sử dụng");
@@ -58,7 +58,6 @@ public class ManagerService {
         existingManager.setBirthDate(updatedManager.getBirthDate());
         existingManager.setCid(updatedManager.getCId());
         existingManager.setSpecificAddress(updatedManager.getSpecificAddress());
-        existingManager.setCommuneWard(ward);
         existingManager.setEnabled(isEnabled);
         if(!isEnabled) eventPublisher.publishEvent(new UserDisabledEvent(existingManager.getEmail()));
         managerRepository.save(existingManager);
@@ -73,9 +72,8 @@ public class ManagerService {
                 throw new RuntimeException(message);
         }
     }
+    @Transactional
     public void createManager(CreateManagerDto registerDto) {
-        CommuneWard ward = communeWardRepository.findById(registerDto.getCommuneWardCode())
-            .orElseThrow(() -> new RuntimeException("Không tìm thấy xã"));
         if (userRepository.existsByEmail(registerDto.getEmail())) {
             throw new IllegalArgumentException("Mail đã được sử dụng");
         }
@@ -90,7 +88,6 @@ public class ManagerService {
             .fullname(registerDto.getFullname())
             .birthDate(registerDto.getBirthDate())
             .cid(registerDto.getCId())
-            .communeWard(ward)
             .specificAddress(registerDto.getSpecificAddress())
             .build();
         managerRepository.save(manager);

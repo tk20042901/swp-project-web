@@ -302,26 +302,7 @@
 <div th:replace="~{fragments/footer :: footer}"></div>
 <script th:src="@{/js/bootstrap/bootstrap.bundle.min.js}"></script>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const checkoutForm = document.getElementById('checkoutForm');
-        if (checkoutForm) {
-            const checkoutButton = checkoutForm.querySelector('button[type="submit"]');
 
-            checkoutButton.addEventListener('click', function (e) {
-                let changed = false;
-                document.querySelectorAll('input[name="quantity"]').forEach(input => {
-                    if (input.value !== input.defaultValue) changed = true;
-                });
-
-                if (changed) {
-                    e.preventDefault();
-                    alert('Vui lòng bấm Enter hoặc click ra ngoài để cập nhật số lượng trước khi thanh toán.');
-                }
-            });
-        }
-    });
-</script>
 </body>
 
 </html>

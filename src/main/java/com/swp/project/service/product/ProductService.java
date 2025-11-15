@@ -258,21 +258,39 @@ public class ProductService {
         return productRepository.findTopByOrderByIdDesc();
     }
 
-    public boolean checkUniqueProductName(Long productId, String name) {
-        Long finalProductId = (productId == null) ? -1L : productId;
+    public boolean checkUniqueProductNameForUpdate(Long productId, String name) {
         return productRepository
                 .findAll()
                 .stream()
-                .anyMatch(p -> p.getName().equals(name) && p.getId() != finalProductId);
+                .anyMatch(p -> p.getName().equals(name) && p.getId() != productId);
     }
 
-    public boolean checkUniqueProductFromSellerRequest(Long productId, String name) throws JsonProcessingException{
-        Long finalProductId = (productId == null) ? -1L : productId;
+    public boolean checkUniqueProductFromSellerRequestForUpdate(Long productId,String name) throws JsonProcessingException{
         boolean existed = false;
         for (SellerRequest sellerRequest : sellerRequestService.getSellerRequestByEntityName(Product.class)) {
             Product p = sellerRequestService.getEntityFromContent(sellerRequest.getContent(), Product.class);
-            if(sellerRequestStatusService.isPendingStatus(sellerRequest) && p.getName().equals(name) && !p.getId().equals(finalProductId)){
+            if(sellerRequestStatusService.isPendingStatus(sellerRequest) && p.getName().equals(name) && p.getId() != productId){
                 existed = true;
+                break;
+            }
+        }
+        return existed;
+    }
+
+    public boolean checkUniqueProductNameForCreate(String name) {
+        return productRepository
+                .findAll()
+                .stream()
+                .anyMatch(p -> p.getName().equals(name));
+    }
+
+    public boolean checkUniqueProductFromSellerRequestForCreate(String name) throws JsonProcessingException{
+        boolean existed = false;
+        for (SellerRequest sellerRequest : sellerRequestService.getSellerRequestByEntityName(Product.class)) {
+            Product p = sellerRequestService.getEntityFromContent(sellerRequest.getContent(), Product.class);
+            if(sellerRequestStatusService.isPendingStatus(sellerRequest) && p.getName().equals(name)){
+                existed = true;
+                break;
             }
         }
         return existed;
@@ -284,7 +302,7 @@ public class ProductService {
             String message = fieldError.getField() + ": " + fieldError.getDefaultMessage();
             throw new RuntimeException(message);
         }
-        if (checkUniqueProductName(productDto.getId(), productDto.getName()) && checkUniqueProductFromSellerRequest(productDto.getId(),productDto.getName())) {
+        if (checkUniqueProductNameForCreate(productDto.getName()) || checkUniqueProductFromSellerRequestForCreate(productDto.getName())) {
             throw new Exception("Tên sản phẩm đã tồn tại");
         }
         if (productDto.getImage() == null || productDto.getImage().isEmpty()) {
@@ -339,7 +357,7 @@ public class ProductService {
             categories.add(categoryService.getCategoryById(catId));
         }
         updateProductDto.setFinalCategories(categories);
-        if (checkUniqueProductName(updateProductDto.getId(), updateProductDto.getName()) && checkUniqueProductFromSellerRequest(updateProductDto.getId(),updateProductDto.getName())) {
+        if (checkUniqueProductNameForUpdate(updateProductDto.getId(), updateProductDto.getName()) || checkUniqueProductFromSellerRequestForUpdate(updateProductDto.getId(), updateProductDto.getName())) {
             throw new Exception("Tên sản phẩm đã tồn tại");
         }
         if (imageFile == null || imageFile.isEmpty()) {

@@ -4,18 +4,14 @@ import com.swp.project.dto.UpdateCategoryDto;
 import com.swp.project.dto.ViewProductDto;
 import com.swp.project.entity.product.Category;
 import com.swp.project.entity.product.Product;
-import com.swp.project.entity.seller_request.SellerRequest;
 import com.swp.project.listener.event.ProductRelatedUpdateEvent;
 import com.swp.project.repository.product.CategoryRepository;
 import com.swp.project.repository.product.ProductRepository;
 import com.swp.project.service.seller_request.SellerRequestService;
-
-import jakarta.validation.Valid;
+import com.swp.project.service.seller_request.SellerRequestStatusService;
 import lombok.RequiredArgsConstructor;
-
 import java.security.Principal;
 import java.util.List;
-
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,10 +23,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class CategoryService {
 
+    private final SellerRequestStatusService sellerRequestStatusService;
     private final CategoryRepository categoryRepository;
     private final ApplicationEventPublisher eventPublisher;
     private final SellerRequestService sellerRequestService;
     private final ProductRepository productRepository;
+
     public List<Category> getAllCategories() {
         return categoryRepository.findAll();
     }
@@ -81,12 +79,41 @@ public class CategoryService {
         Category oldCategory = getCategoryById(updateCategoryDto.getId());
         if (oldCategory == null) {
             throw new Exception("Không tìm thấy danh mục");
-        } 
-        Product p = productRepository.findAll().stream().filter(x -> x.getCategories().stream().anyMatch(c -> c.getName().equals(updateCategoryDto.getName()))).findFirst().orElse(null);
-        if(!updateCategoryDto.isActive() && p != null){
+        }
+        Product p = productRepository.findAll().stream()
+                .filter(x -> x.getCategories().stream().anyMatch(c -> c.getName().equals(updateCategoryDto.getName())))
+                .findFirst().orElse(null);
+        if (!updateCategoryDto.isActive() && p != null) {
             throw new Exception("Danh mục đã được sử dụng bởi sản phẩm " + p.getName());
+        }
+        if (nameAlreadyExistsForUpdate(updateCategoryDto.getId(), updateCategoryDto.getName())) {
+            throw new Exception("Danh mục đã tồn tại");
+        }
+        if (nameAlreadyExistsInSellerRequest(updateCategoryDto.getName())) {
+            throw new Exception("Danh mục đã tồn tại trong yêu cầu của người bán");
         }
         Category newCategory = new Category(updateCategoryDto);
         sellerRequestService.saveUpdateRequest(oldCategory, newCategory, principal.getName());
+    }
+
+    public boolean nameAlreadyExistsForCreate(String name) {
+        return categoryRepository.existsByName(name);
+    }
+
+    public boolean nameAlreadyExistsInSellerRequest(String name) throws Exception {
+        boolean existed = false;
+        for (var sellerRequest : sellerRequestService.getSellerRequestByEntityName(Category.class)) {
+            Category c = sellerRequestService.getEntityFromContent(sellerRequest.getContent(), Category.class);
+            if (sellerRequestStatusService.isPendingStatus(sellerRequest) && c.getName().equals(name)) {
+                existed = true;
+                break;
+            }
+        }
+        return existed;
+    }
+
+    public boolean nameAlreadyExistsForUpdate(Long id, String name) {
+        return categoryRepository.findAll().stream()
+                .anyMatch(c -> c.getName().equals(name) && c.getId() != id);
     }
 }

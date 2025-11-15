@@ -113,40 +113,46 @@ public class AdminController {
 
     @PostMapping("/create-manager")
     public String createManager(
-            @Valid @ModelAttribute CreateManagerDto managerRegisterDto,
+            @Valid @ModelAttribute("managerRegisterDto") CreateManagerDto managerRegisterDto,
             BindingResult bindingResult,
             RedirectAttributes redirectAttributes,
             Model model) {
+        if (bindingResult.hasErrors()) {
+            return "pages/admin/create-manager";
+        }
         try {
-            managerService.validateCreateManager(managerRegisterDto, bindingResult);
             managerService.createManager(managerRegisterDto);
             redirectAttributes.addFlashAttribute("success", "Tạo quản lý thành công.");
         } catch (RuntimeException e) {
-            redirectAttributes.addFlashAttribute("failed", e.getMessage());
-            return "redirect:/admin/create-manager";
+            model.addAttribute("failed", e.getMessage());
+            return "pages/admin/create-manager";
         }
         return "redirect:/admin/manage-manager";
     }
 
     @PostMapping("/edit-manager/{id}")
     public String editManager(@PathVariable Long id,
-            @Valid @ModelAttribute EditManagerDto editManagerDto,
-            BindingResult bindingResult,
-            RedirectAttributes redirectAttributes) {
-        try {
-            if (bindingResult.hasErrors()) {
-                FieldError fieldError = bindingResult.getFieldErrors().get(0);
-                String message = fieldError.getField() + ": " + fieldError.getDefaultMessage();
-                throw new RuntimeException(message);
-            }
-            managerService.updateManager(id, editManagerDto);
-            redirectAttributes.addFlashAttribute("success", "Cập nhật quản lý thành công.");
-        } catch (RuntimeException e) {
-            redirectAttributes.addFlashAttribute("failed", e.getMessage());
-            return "redirect:/admin/edit-manager/" + id;
+                              @Valid @ModelAttribute EditManagerDto editManagerDto,
+                              BindingResult bindingResult,
+                              Model model,
+                              RedirectAttributes redirectAttributes) {
+
+        if (bindingResult.hasErrors()) {
+            return "pages/admin/edit-manager";
         }
+
+        try {
+            managerService.updateManager(id, editManagerDto);
+        } catch (RuntimeException e) {
+            // nếu muốn vẫn có lỗi chung
+            model.addAttribute("failed", e.getMessage());
+            return "pages/admin/edit-manager";
+        }
+
+        redirectAttributes.addFlashAttribute("success", "Cập nhật quản lý thành công.");
         return "redirect:/admin/manage-manager";
     }
+
 
 
 

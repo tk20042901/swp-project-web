@@ -14,4 +14,5 @@ public interface ProductUnitRepository extends JpaRepository<ProductUnit,Long> {
     List<ProductUnit> findByIsAllowDecimal(boolean allowDecimal);
     Page<ProductUnit> findAll(Pageable pageable);
     List<ProductUnit> findByIsActiveTrue();
+    boolean existsByName(String name);
 }

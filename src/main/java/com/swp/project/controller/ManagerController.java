@@ -299,45 +299,48 @@ public class ManagerController {
             @RequestParam(value = "className", required = false) String className,
             @RequestParam(value = "email", required = false) String email,
             Model model,
-            HttpSession session) {
+            HttpSession session,
+            RedirectAttributes redirectAttributes) {
 
         List<ProvinceCity> provinces = addressService.getAllProvinceCity();
         List<CommuneWard> wards = new ArrayList<>();
         StaffDto staffDto = (StaffDto) session.getAttribute("staffDto");
 
-        if (className != null && !className.isEmpty()) {
-            switch (className) {
-                case "Seller":
-                    session.setAttribute("newClassName", className);
-                    if (email != null && !email.isEmpty()) {
-                        Seller seller = sellerService.getByEmail(email);
+        if (className == null || !className.matches("Seller|Shipper")) {
+            redirectAttributes.addFlashAttribute("err", "Vai trò không hợp lệ");
+            return "redirect:/manager/manage-seller";
+        }
+        switch (className) {
+            case "Seller":
+                session.setAttribute("newClassName", className);
+                if (email != null && !email.isEmpty()) {
+                    Seller seller = sellerService.getByEmail(email);
 
-                        if (seller == null) {
-                            staffDto = new StaffDto();
-                            break;
-                        }
-
-                        staffDto = new StaffDto().parse(seller);
-                    } else {
+                    if (seller == null) {
                         staffDto = new StaffDto();
+                        break;
                     }
-                    break;
-                case "Shipper":
-                    session.setAttribute("newClassName", className);
-                    if (email != null && !email.isEmpty()) {
-                        Shipper shipper = shipperService.getByEmail(email);
 
-                        if (shipper == null) {
-                            staffDto = new StaffDto();
-                            break;
-                        }
+                    staffDto = new StaffDto().parse(seller);
+                } else {
+                    staffDto = new StaffDto();
+                }
+                break;
+            case "Shipper":
+                session.setAttribute("newClassName", className);
+                if (email != null && !email.isEmpty()) {
+                    Shipper shipper = shipperService.getByEmail(email);
 
-                        staffDto = new StaffDto().parse(shipper);
-                    } else {
+                    if (shipper == null) {
                         staffDto = new StaffDto();
+                        break;
                     }
-                    break;
-            }
+
+                    staffDto = new StaffDto().parse(shipper);
+                } else {
+                    staffDto = new StaffDto();
+                }
+                break;
         }
         if (staffDto.getProvinceCity() != null) {
             wards = addressService.getAllCommuneWardByProvinceCityCode(staffDto.getProvinceCity());
@@ -396,13 +399,6 @@ public class ManagerController {
                                 if (staffDto.getId() != 0) {
                                     sellerService.setSellerStatus(staffDto.getId(), staffDto.isEnabled());
                                 }
-                                // sellerService.findByNameAndCid(
-                                //         session.getAttribute("queryName").toString(),
-                                //         session.getAttribute("queryCid").toString());
-                                // sellerService.sortBy(session.getAttribute("sortCriteria").toString(),
-                                //         (int) session.getAttribute("k"));
-
-                                // session.setAttribute("list", sellerService.getResults());
                             } catch (Exception e) {
                                 redirectAttributes.addFlashAttribute("error", e.getMessage());
                                 return editRedirectUrl;
@@ -451,12 +447,6 @@ public class ManagerController {
                 return "redirect:/manager/manage-seller";
         }
     }
-
-
-
-
-
-
 
     @GetMapping("/all-products-request")
     public String getAllProductsRequest(
@@ -854,13 +844,13 @@ public class ManagerController {
         (Integer) session.getAttribute("k"),
         (String) session.getAttribute("sortCriteriaInPage"));
 
-        model.addAttribute("k", session.getAttribute("k"));
-        model.addAttribute("bills", bills.getContent());
-        model.addAttribute("subpageIndex", session.getAttribute("subpageIndex"));
-        model.addAttribute("numEachPage", numEachPage);
-        model.addAttribute("sortCriteria", session.getAttribute("sortCriteria"));
-        model.addAttribute("sortCriteriaInPage", session.getAttribute("sortCriteriaInPage"));
-        model.addAttribute("queryName", session.getAttribute("queryName"));
+    model.addAttribute("k", session.getAttribute("k"));
+    model.addAttribute("bills", bills.getContent());
+    model.addAttribute("subpageIndex", session.getAttribute("subpageIndex"));
+    model.addAttribute("numEachPage", numEachPage);
+    model.addAttribute("sortCriteria", session.getAttribute("sortCriteria"));
+    model.addAttribute("sortCriteriaInPage", session.getAttribute("sortCriteriaInPage"));
+    model.addAttribute("queryName", session.getAttribute("queryName"));
     model.addAttribute("totalPages", bills.getTotalPages());
     model.addAttribute("billService", billService);
     // Add new search fields to model for form repopulation

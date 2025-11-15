@@ -8,8 +8,37 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/create-manager.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: 260px;
+            padding: 30px;
+            background: #ffffff;
+            min-height: 100vh;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                margin-left: 70px;
+                padding: 20px;
+            }
+        }
+    </style>
 </head>
 <body>
+<div class="layout">
+    <div th:replace="~{fragments/admin-sidebar :: admin-sidebar}"></div>
+
     <div class="main-content">
         <div class="container">
             <a th:href="@{/admin/manage-manager}" class="back-link">
@@ -39,6 +68,7 @@
                         </div>
 
                         <div class="row">
+                            <!-- Email -->
                             <div class="col-md-12 mb-3">
                                 <label for="email" class="form-label">
                                     Email<span class="required-mark">*</span>
@@ -47,11 +77,16 @@
                                        class="form-control"
                                        id="email"
                                        th:field="*{email}"
-                                       th:classappend="${#fields.hasErrors('email')} ? 'is-invalid' : ''"
+                                       th:classappend="${#fields.hasErrors('email')} ? ' is-invalid' : ''"
                                        placeholder="Nhập địa chỉ email"
                                        required/>
+                                <div class="invalid-feedback"
+                                     th:if="${#fields.hasErrors('email')}"
+                                     th:errors="*{email}">
+                                </div>
                             </div>
 
+                            <!-- Password -->
                             <div class="col-md-6 mb-3">
                                 <label for="password" class="form-label">
                                     Mật khẩu<span class="required-mark">*</span>
@@ -60,9 +95,13 @@
                                        class="form-control"
                                        id="password"
                                        th:field="*{password}"
-                                       th:classappend="${#fields.hasErrors('password')} ? 'is-invalid' : ''"
+                                       th:classappend="${#fields.hasErrors('password')} ? ' is-invalid' : ''"
                                        placeholder="Nhập mật khẩu"
                                        required/>
+                                <div class="invalid-feedback"
+                                     th:if="${#fields.hasErrors('password')}"
+                                     th:errors="*{password}">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -75,6 +114,7 @@
                         </div>
 
                         <div class="row">
+                            <!-- Fullname -->
                             <div class="col-md-12 mb-3">
                                 <label for="fullname" class="form-label">
                                     Họ và tên<span class="required-mark">*</span>
@@ -83,11 +123,16 @@
                                        class="form-control"
                                        id="fullname"
                                        th:field="*{fullname}"
-                                       th:classappend="${#fields.hasErrors('fullname')} ? 'is-invalid' : ''"
+                                       th:classappend="${#fields.hasErrors('fullname')} ? ' is-invalid' : ''"
                                        placeholder="Nhập họ và tên đầy đủ"
                                        required/>
+                                <div class="invalid-feedback"
+                                     th:if="${#fields.hasErrors('fullname')}"
+                                     th:errors="*{fullname}">
+                                </div>
                             </div>
 
+                            <!-- BirthDate -->
                             <div class="col-md-6 mb-3">
                                 <label for="birthDate" class="form-label">
                                     Ngày sinh<span class="required-mark">*</span>
@@ -96,10 +141,15 @@
                                        class="form-control"
                                        id="birthDate"
                                        th:field="*{birthDate}"
-                                       th:classappend="${#fields.hasErrors('birthDate')} ? 'is-invalid' : ''"
+                                       th:classappend="${#fields.hasErrors('birthDate')} ? ' is-invalid' : ''"
                                        required/>
+                                <div class="invalid-feedback"
+                                     th:if="${#fields.hasErrors('birthDate')}"
+                                     th:errors="*{birthDate}">
+                                </div>
                             </div>
 
+                            <!-- cId -->
                             <div class="col-md-6 mb-3">
                                 <label for="cId" class="form-label">
                                     CMND/CCCD<span class="required-mark">*</span>
@@ -108,9 +158,13 @@
                                        class="form-control"
                                        id="cId"
                                        th:field="*{cId}"
-                                       th:classappend="${#fields.hasErrors('cId')} ? 'is-invalid' : ''"
+                                       th:classappend="${#fields.hasErrors('cId')} ? ' is-invalid' : ''"
                                        placeholder="Nhập số CMND/CCCD"
                                        required/>
+                                <div class="invalid-feedback"
+                                     th:if="${#fields.hasErrors('cId')}"
+                                     th:errors="*{cId}">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -123,32 +177,7 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="provinceCityCode" class="form-label">
-                                    Tỉnh/Thành phố<span class="required-mark">*</span>
-                                </label>
-                                <select class="form-select"
-                                        id="provinceCityCode"
-                                        th:field="*{provinceCityCode}"
-                                        th:classappend="${#fields.hasErrors('provinceCityCode')} ? 'is-invalid' : ''"
-                                        required>
-                                    <option value="">Chọn Tỉnh/Thành phố</option>
-                                </select>
-                            </div>
-
-                            <div class="col-md-6 mb-3">
-                                <label for="communeWardCode" class="form-label">
-                                    Phường/Xã<span class="required-mark">*</span>
-                                </label>
-                                <select class="form-select"
-                                        id="communeWardCode"
-                                        th:field="*{communeWardCode}"
-                                        th:classappend="${#fields.hasErrors('communeWardCode')} ? 'is-invalid' : ''"
-                                        required>
-                                    <option value="">Chọn Phường/Xã</option>
-                                </select>
-                            </div>
-
+                            <!-- Specific Address -->
                             <div class="col-md-12 mb-3">
                                 <label for="specificAddress" class="form-label">
                                     Địa chỉ cụ thể<span class="required-mark">*</span>
@@ -157,9 +186,13 @@
                                        class="form-control"
                                        id="specificAddress"
                                        th:field="*{specificAddress}"
-                                       th:classappend="${#fields.hasErrors('specificAddress')} ? 'is-invalid' : ''"
+                                       th:classappend="${#fields.hasErrors('specificAddress')} ? ' is-invalid' : ''"
                                        placeholder="Số nhà, tên đường..."
                                        required/>
+                                <div class="invalid-feedback"
+                                     th:if="${#fields.hasErrors('specificAddress')}"
+                                     th:errors="*{specificAddress}">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -175,8 +208,9 @@
             </div>
         </div>
     </div>
+</div>
 
-    <script th:src="@{/js/address/address.js}"></script>
-    <script src="/js/bootstrap/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/address/address.js}"></script>
+<script src="/js/bootstrap/bootstrap.bundle.min.js"></script>
 </body>
 </html>

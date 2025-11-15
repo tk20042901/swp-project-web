@@ -2,7 +2,6 @@ package com.swp.project.controller;
 
 import java.security.Principal;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -41,8 +40,6 @@ import com.swp.project.service.user.CustomerService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import vn.payos.PayOS;
-import vn.payos.model.v2.paymentRequests.CreatePaymentLinkRequest;
 
 @SessionAttributes("shoppingCartItems")
 @RequiredArgsConstructor
@@ -56,7 +53,6 @@ public class CustomerController {
     private final OrderService orderService;
     private final OrderStatusService orderStatusService;
     private final PaymentMethodService paymentMethodService;
-    private final PayOS payOS;
 
     @GetMapping("/account-manager")
     public String accountManager(Model model, Principal principal) {
@@ -141,12 +137,20 @@ public class CustomerController {
     public String viewShoppingCart(Model model, HttpSession session,
                                    Principal principal) {
         List<ShoppingCartItem> cartItems = customerService.getCart(principal.getName());
+        List<ShoppingCartItem> itemToRemove = new ArrayList<>();
         for(ShoppingCartItem item: cartItems) {
-        if (item.getProduct().getQuantity() <= 0) {
-            customerService.removeItem(principal.getName(), item.getProduct().getId());
+            if (item.getQuantity() > item.getProduct().getQuantity()) {
+                item.setQuantity(item.getProduct().getQuantity());
+                customerService.updateCartQuantity(principal.getName(), item.getProduct().getId(), item.getQuantity());
+            }
+            if(!item.getProduct().isEnabled() || item.getProduct().getQuantity() <= 0){
+                customerService.removeItem(principal.getName(), item.getProduct().getId());
+                itemToRemove.add(item);
+            }
         }
-    }
-
+        for(ShoppingCartItem item: itemToRemove){
+            cartItems.remove(item);
+        }
         List<Long> selectedIds = (List<Long>) session.getAttribute("selectedIds");
         if (selectedIds == null) {
             selectedIds = new ArrayList<>();
@@ -423,34 +427,12 @@ public class CustomerController {
                 orderService.createCodOrder(principal.getName(), shoppingCartItems,deliveryInfoDto);
                 return "redirect:/customer/order-success";
             } else {
-                Order order = orderService.createQrOrder(principal.getName(), shoppingCartItems,deliveryInfoDto);
-                return "redirect:/customer/pay-os-checkout?orderId=" + order.getId();
+                String paymentLink = orderService.createQrOrder(principal.getName(), shoppingCartItems,deliveryInfoDto)
+                        .getPaymentLink();
+                return "redirect:" + paymentLink;
             }
         } catch (Exception e){
             redirectAttributes.addFlashAttribute("error", e.getMessage());
-            return "redirect:/customer/shopping-cart";
-        }
-    }
-
-    @GetMapping("/pay-os-checkout")
-    public String payOsCheckout(@RequestParam Long orderId) {
-        Order order = orderService.getOrderById(orderId);
-        try {
-            CreatePaymentLinkRequest paymentData =
-                    CreatePaymentLinkRequest.builder()
-                            .orderCode(order.getId())
-                            .amount(2000L)
-                            .expiredAt(order.getPaymentExpiredAt().atZone(ZoneId.systemDefault()).toEpochSecond())
-                            .description("FS-" + order.getId())
-                            .returnUrl("https://fruitshop.tech/customer/order-success")
-                            .cancelUrl("https://fruitshop.tech/customer/order-cancel")
-                            .build();
-            String checkoutUrl = payOS.paymentRequests().create(paymentData).getCheckoutUrl();
-            order.setPaymentLink(checkoutUrl);
-            orderService.saveOrder(order);
-            return "redirect:" + checkoutUrl;
-        } catch (Exception e) {
-            e.printStackTrace();
             return "redirect:/customer/shopping-cart";
         }
     }

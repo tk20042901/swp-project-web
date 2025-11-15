@@ -80,7 +80,7 @@
                                     Hiện danh mục<span class="required-mark">*</span>
                                 </label>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" th:field="*{isActive}" id="allowActiveYes"
+                                    <input class="form-check-input" type="radio" th:field="*{active}" id="allowActiveYes"
                                         value="true" required />
                                     <label class="form-check-label" for="allowActiveYes">
                                         <strong>Có</strong> - Hiển thị danh mục này trong danh sách khi tạo hoặc chỉnh sửa sản
@@ -88,7 +88,7 @@
                                     </label>
                                 </div>
                                 <div class="form-check mt-2">
-                                    <input class="form-check-input" type="radio" th:field="*{isActive}" id="allowActiveNo"
+                                    <input class="form-check-input" type="radio" th:field="*{active}" id="allowActiveNo"
                                         value="false" required />
                                     <label class="form-check-label" for="allowActiveNo">
                                         <strong>Không</strong> - Ẩn danh mục này khỏi danh sách khi tạo hoặc chỉnh sửa sản

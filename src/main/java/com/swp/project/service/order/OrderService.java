@@ -7,6 +7,7 @@ import java.security.Principal;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -47,6 +48,8 @@ import com.swp.project.service.product.ProductService;
 import com.swp.project.service.user.ShipperService;
 
 import lombok.RequiredArgsConstructor;
+import vn.payos.PayOS;
+import vn.payos.model.v2.paymentRequests.CreatePaymentLinkRequest;
 
 @RequiredArgsConstructor
 @Service
@@ -64,16 +67,13 @@ public class OrderService {
     private final BillRepository billRepository;
     private final ProductRepository productRepository;
     private final ShipperService shipperService;
+    private final PayOS payOS;
 
     private List<Order> results = List.of();
 
     public Page<Order> getAllOrder() {
         Pageable pageable = PageRequest.of(0,5, Sort.by("orderAt").descending());
         return orderRepository.findAll(pageable);
-    }
-
-    public void saveOrder(Order order) {
-        orderRepository.save(order);
     }
 
     public Page<Order> searchOrder(SellerSearchOrderDto sellerSearchOrderDto) {
@@ -174,7 +174,7 @@ public class OrderService {
 
         Order order = orderRepository.save(Order.builder()
                 .paymentMethod(paymentMethodService.getQrMethod())
-                .paymentExpiredAt(LocalDateTime.now().plusMinutes(3)) // QR expires in 3 minutes
+                .paymentExpiredAt(LocalDateTime.now().plusMinutes(2)) // QR expires in 2 minutes
                 .orderStatus(orderStatusService.getPendingPaymentStatus())
                 .fullName(deliveryInfoDto.getFullName())
                 .phoneNumber(deliveryInfoDto.getPhone())
@@ -194,6 +194,18 @@ public class OrderService {
                             .build());
                 });
         order.setOrderItem(orderItems);
+
+        CreatePaymentLinkRequest paymentData =
+                CreatePaymentLinkRequest.builder()
+                        .orderCode(order.getId())
+                        .amount(order.getTotalAmount())
+                        .expiredAt(order.getPaymentExpiredAt().atZone(ZoneId.systemDefault()).toEpochSecond())
+                        .description("FS" + order.getId())
+                        .returnUrl("http://localhost:8080/customer/order-success")
+                        .cancelUrl("http://localhost:8080/customer/order-cancel")
+                        .build();
+        order.setPaymentLink(payOS.paymentRequests().create(paymentData).getCheckoutUrl());
+
         return orderRepository.save(order);
     }
 
@@ -205,7 +217,7 @@ public class OrderService {
         expiredOrders.forEach(order -> {
             order.getOrderItem().forEach(item ->
                     productService.releaseProductQuantity(item.getProduct().getId(), item.getQuantity()));
-            setOrderStatus(order.getId(), orderStatusService.getCancelledStatus());
+            order.setOrderStatus(orderStatusService.getCancelledStatus());
         });
         orderRepository.saveAll(expiredOrders);
     }
@@ -271,10 +283,6 @@ public class OrderService {
         return orderRepository.findById(orderId).orElseThrow(() ->
                 new RuntimeException("Không tìm thấy đơn hàng với ID: " + orderId));
     }
-
-    // public Long calculateTotalAmount(Order order) {
-    //     return order.getTotalAmount();
-    // }
 
     public long getTotalOrders(){
         return orderRepository.count();

@@ -26,7 +26,7 @@ import org.hibernate.annotations.Formula;
 public class Order{
     @Id
     @Builder.Default
-    private Long id = ThreadLocalRandom.current().nextLong(10000,100000);
+    private Long id = ThreadLocalRandom.current().nextLong(100000,1000000);
 
     @ManyToOne(fetch = FetchType.EAGER)
     private Customer customer;
