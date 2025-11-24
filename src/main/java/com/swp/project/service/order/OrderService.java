@@ -201,8 +201,8 @@ public class OrderService {
                         .amount(order.getTotalAmount())
                         .expiredAt(order.getPaymentExpiredAt().atZone(ZoneId.systemDefault()).toEpochSecond())
                         .description("FS" + order.getId())
-                        .returnUrl("http://localhost:8080/customer/order-success")
-                        .cancelUrl("http://localhost:8080/customer/order-cancel")
+                        .returnUrl("https://fruitshop.tech/customer/order-success")
+                        .cancelUrl("https://fruitshop.tech/customer/order-cancel")
                         .build();
         order.setPaymentLink(payOS.paymentRequests().create(paymentData).getCheckoutUrl());
 
